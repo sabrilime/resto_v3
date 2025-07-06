@@ -32,6 +32,14 @@ export class User {
   @ApiProperty({ description: 'Whether the user account is active', default: true })
   isActive: boolean;
 
+  @Column({ nullable: true })
+  @ApiProperty({ description: 'Google ID if user registered with Google', required: false })
+  googleId?: string;
+
+  @Column({ default: 'local' })
+  @ApiProperty({ description: 'Auth provider (local or google)', default: 'local' })
+  provider: string;
+
   @CreateDateColumn()
   @ApiProperty({ description: 'Creation timestamp' })
   createdAt: Date;

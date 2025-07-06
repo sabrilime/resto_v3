@@ -7,9 +7,14 @@ export const api = {
   // Helper function to make API calls
   async fetch(endpoint: string, options?: RequestInit) {
     const url = `${this.baseURL}${endpoint}`;
+    
+    // Get token from localStorage if available
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` }),
         ...options?.headers,
       },
       ...options,
@@ -55,5 +60,21 @@ export const api = {
     delete: (id: number) => api.fetch(`/restaurants/${id}`, {
       method: 'DELETE',
     }),
+  },
+
+  // Auth endpoints
+  auth: {
+    login: (data: { email: string; password: string }) => api.fetch('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+    register: (data: { firstName: string; lastName: string; email: string; password: string }) => api.fetch('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+    logout: () => api.fetch('/auth/logout', {
+      method: 'POST',
+    }),
+    me: () => api.fetch('/auth/me'),
   },
 }; 

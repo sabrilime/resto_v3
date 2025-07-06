@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton
-} from '@clerk/nextjs';
 import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { Navbar } from "@/components/navbar";
 import { cn } from "@/lib/utils";
-import { frFR } from "@clerk/localizations";
+import { AuthWrapper } from "@/components/auth-wrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,18 +20,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider localization={frFR}>
-      <html lang="en" suppressHydrationWarning>
-        <body className={cn("bg-secondary", inter.className)}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-          >
-            {children}
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={cn("bg-secondary", inter.className)}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+        >
+          <AuthProvider>
+            <AuthWrapper>
+              <Navbar />
+              {children}
+            </AuthWrapper>
+          </AuthProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

@@ -22,13 +22,35 @@ export class UsersService {
       throw new ConflictException('User with this email already exists');
     }
 
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    console.log('Creating user with email:', createUserDto.email);
+    console.log('Original password:', createUserDto.password);
+    console.log('Password type:', typeof createUserDto.password);
+    console.log('Password length:', createUserDto.password.length);
+    
+    // Check if password is already hashed
+    const isAlreadyHashed = createUserDto.password.startsWith('$2b$') && createUserDto.password.length === 60;
+    console.log('Password appears to be already hashed:', isAlreadyHashed);
+    
+    let hashedPassword;
+    if (isAlreadyHashed) {
+      console.log('Using password as-is (already hashed)');
+      hashedPassword = createUserDto.password;
+    } else {
+      console.log('Hashing password');
+      hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    }
+    
+    console.log('Final password hash:', hashedPassword);
+    
     const user = this.userRepository.create({
       ...createUserDto,
       password: hashedPassword,
     });
 
-    return await this.userRepository.save(user);
+    const savedUser = await this.userRepository.save(user);
+    console.log('User saved with ID:', savedUser.id);
+    console.log('Saved user password hash:', savedUser.password);
+    return savedUser;
   }
 
   async findAll(): Promise<User[]> {
@@ -53,6 +75,27 @@ export class UsersService {
     return await this.userRepository.findOne({
       where: { email, isActive: true },
     });
+  }
+
+  async findByEmailWithPassword(email: string): Promise<User> {
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.email = :email', { email })
+      .andWhere('user.isActive = :isActive', { isActive: true })
+      .getOne();
+    
+    console.log('findByEmailWithPassword - user found:', !!user);
+    if (user) {
+      console.log('findByEmailWithPassword - password field exists:', !!user.password);
+      console.log('findByEmailWithPassword - password hash:', user.password);
+    }
+    
+    return user;
+  }
+
+  async findByGoogleId(googleId: string): Promise<User | undefined> {
+    return await this.userRepository.findOne({ where: { googleId, isActive: true } });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {

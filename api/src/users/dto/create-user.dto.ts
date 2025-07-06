@@ -18,4 +18,12 @@ export class CreateUserDto {
   @IsString()
   @MinLength(6)
   password: string;
+
+  @ApiProperty({ description: 'The Google ID of the user' })
+  @IsOptional()
+  readonly googleId?: string;
+
+  @ApiProperty({ description: 'The provider of the user' })
+  @IsOptional()
+  readonly provider?: string;
 } 
