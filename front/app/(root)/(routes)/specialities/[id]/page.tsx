@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { RestaurantActions } from '@/components/restaurant-actions';
 import { api } from '@/lib/api';
 import { ArrowLeft, MapPin, Phone, Globe, Star } from 'lucide-react';
 
@@ -22,6 +23,11 @@ interface Restaurant {
   createdAt: string;
   updatedAt: string;
   specialities: Speciality[];
+  postedBy?: {
+    id: number;
+    firstName: string;
+    lastName: string;
+  };
 }
 
 interface Speciality {
@@ -127,7 +133,12 @@ const SpecialityDetailPage = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {restaurants.map((restaurant) => (
-            <Card key={restaurant.id} className="hover:shadow-lg transition-shadow">
+            <Card key={restaurant.id} className="hover:shadow-lg transition-shadow relative">
+              {/* Action Icons */}
+              <div className="absolute top-2 right-2 flex gap-1 z-10">
+                <RestaurantActions restaurantId={restaurant.id} />
+              </div>
+
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between">
                   <CardTitle className="text-lg">{restaurant.name}</CardTitle>
@@ -164,6 +175,15 @@ const SpecialityDetailPage = () => {
                         {spec.name}
                       </Badge>
                     ))}
+                  </div>
+                )}
+
+                {restaurant.postedBy && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span className="text-xs">Posted by:</span>
+                    <span className="text-xs font-medium">
+                      {restaurant.postedBy.firstName} {restaurant.postedBy.lastName}
+                    </span>
                   </div>
                 )}
               </CardContent>

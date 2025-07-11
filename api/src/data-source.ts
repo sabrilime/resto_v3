@@ -11,7 +11,7 @@ export default new DataSource({
   username: process.env.DB_USERNAME || 'postgres',
   password: process.env.DB_PASSWORD || 'password',
   database: process.env.DB_DATABASE || 'restolover',
-  entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-  migrations: [join(__dirname, 'migrations', '*.{ts,js}')],
+  entities: [join(process.cwd(), 'dist', '**', '*.entity.{js,ts}')],
+  migrations: [join(process.cwd(), 'dist', 'migrations', '*.{js,ts}')],
   synchronize: false,
-}); 
+});

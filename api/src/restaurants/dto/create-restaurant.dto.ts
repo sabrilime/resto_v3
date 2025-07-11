@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsNumber, IsUrl, Min, Max } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsUrl, Min, Max, IsBoolean, IsArray } from 'class-validator';
 
 export class CreateRestaurantDto {
   @ApiProperty({ description: 'The name of the restaurant' })
@@ -11,33 +11,25 @@ export class CreateRestaurantDto {
   @IsString()
   description?: string;
 
-  @ApiProperty({ description: 'The address of the restaurant' })
-  @IsString()
-  address: string;
-
-  @ApiProperty({ description: 'Phone number of the restaurant', required: false })
-  @IsOptional()
-  @IsString()
-  phone?: string;
-
-  @ApiProperty({ description: 'Website URL of the restaurant', required: false })
+  @ApiProperty({ description: 'Image URL of the restaurant', required: false })
   @IsOptional()
   @IsUrl()
-  website?: string;
+  image?: string;
 
-  @ApiProperty({ description: 'Latitude coordinate', required: false })
+  @ApiProperty({ description: 'Instagram handle of the restaurant', required: false })
   @IsOptional()
-  @IsNumber()
-  @Min(-90)
-  @Max(90)
-  latitude?: number;
+  @IsString()
+  instagram?: string;
 
-  @ApiProperty({ description: 'Longitude coordinate', required: false })
+  @ApiProperty({ description: 'Whether the restaurant is halal', default: false })
   @IsOptional()
-  @IsNumber()
-  @Min(-180)
-  @Max(180)
-  longitude?: number;
+  @IsBoolean()
+  halal?: boolean;
+
+  @ApiProperty({ description: 'Whether the restaurant is delivery only', default: false })
+  @IsOptional()
+  @IsBoolean()
+  onlyDelivery?: boolean;
 
   @ApiProperty({ description: 'Average rating of the restaurant', required: false })
   @IsOptional()
@@ -45,4 +37,20 @@ export class CreateRestaurantDto {
   @Min(0)
   @Max(5)
   rating?: number;
+
+  @ApiProperty({ description: 'ID of the user who posted the restaurant', required: false })
+  @IsOptional()
+  @IsNumber()
+  postedByUserId?: number;
+
+  @ApiProperty({ description: 'ID of the restaurant address', required: false })
+  @IsOptional()
+  @IsNumber()
+  addressId?: number;
+
+  @ApiProperty({ description: 'Array of speciality IDs', type: [Number], required: false })
+  @IsOptional()
+  @IsArray()
+  @IsNumber({}, { each: true })
+  specialityIds?: number[];
 } 

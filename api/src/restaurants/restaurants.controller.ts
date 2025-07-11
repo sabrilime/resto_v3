@@ -8,12 +8,18 @@ import {
   Delete,
   Query,
   ParseIntPipe,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { RestaurantsService } from './restaurants.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { Restaurant } from './entities/restaurant.entity';
+import { AuthGuard } from '@nestjs/passport';
+import { ManyToOne, JoinColumn, Column } from 'typeorm';
+import { User } from '../users/entities/user.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @ApiTags('restaurants')
 @Controller('restaurants')
@@ -21,10 +27,22 @@ export class RestaurantsController {
   constructor(private readonly restaurantsService: RestaurantsService) {}
 
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Create a new restaurant' })
   @ApiResponse({ status: 201, description: 'Restaurant created successfully', type: Restaurant })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  create(@Body() createRestaurantDto: CreateRestaurantDto): Promise<Restaurant> {
+  async create(
+    @Body() createRestaurantDto: CreateRestaurantDto,
+    @Request() req
+  ) {
+    console.log('req.user:', req.user);
+    console.log('req.user.userId:', req.user?.userId);
+    
+    // Overwrite postedByUserId with the authenticated user's id
+    createRestaurantDto.postedByUserId = req.user.userId; // Changed from req.user.id to req.user.userId
+    
+    console.log('After setting postedByUserId:', createRestaurantDto.postedByUserId);
+    
     return this.restaurantsService.create(createRestaurantDto);
   }
 
@@ -63,6 +81,8 @@ export class RestaurantsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateRestaurantDto: UpdateRestaurantDto,
   ): Promise<Restaurant> {
+    console.log('Controller received update request for restaurant:', id);
+    console.log('Update data:', updateRestaurantDto);
     return this.restaurantsService.update(id, updateRestaurantDto);
   }
 

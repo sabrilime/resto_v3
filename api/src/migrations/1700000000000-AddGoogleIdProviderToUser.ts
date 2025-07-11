@@ -4,8 +4,8 @@ export class AddGoogleIdProviderToUser1700000000000 implements MigrationInterfac
     name = 'AddGoogleIdProviderToUser1700000000000'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "users" ADD "googleId" character varying`);
-        await queryRunner.query(`ALTER TABLE "users" ADD "provider" character varying NOT NULL DEFAULT 'local'`);
+        await queryRunner.query(`ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "googleId" character varying`);
+        await queryRunner.query(`ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "provider" character varying NOT NULL DEFAULT 'local'`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

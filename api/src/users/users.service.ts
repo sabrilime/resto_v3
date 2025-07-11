@@ -56,14 +56,14 @@ export class UsersService {
   async findAll(): Promise<User[]> {
     return await this.userRepository.find({
       where: { isActive: true },
-      select: ['id', 'firstName', 'lastName', 'email', 'role', 'isActive', 'createdAt', 'updatedAt'],
+      select: ['id', 'firstName', 'lastName', 'email', 'role', 'isActive', 'googleId', 'provider', 'createdAt', 'updatedAt'],
     });
   }
 
   async findOne(id: number): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id, isActive: true },
-      select: ['id', 'firstName', 'lastName', 'email', 'role', 'isActive', 'createdAt', 'updatedAt'],
+      select: ['id', 'firstName', 'lastName', 'email', 'role', 'isActive', 'googleId', 'provider', 'createdAt', 'updatedAt'],
     });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
@@ -74,6 +74,7 @@ export class UsersService {
   async findByEmail(email: string): Promise<User> {
     return await this.userRepository.findOne({
       where: { email, isActive: true },
+      select: ['id', 'firstName', 'lastName', 'email', 'role', 'isActive', 'googleId', 'provider', 'createdAt', 'updatedAt'],
     });
   }
 

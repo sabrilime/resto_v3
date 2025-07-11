@@ -1,6 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, ManyToOne, JoinColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Speciality } from '../../specialities/entities/speciality.entity';
+import { User } from '../../users/entities/user.entity';
+import { Address } from '../../addresses/entities/address.entity';
 
 @Entity('restaurants')
 export class Restaurant {
@@ -16,25 +18,17 @@ export class Restaurant {
   @ApiProperty({ description: 'Description of the restaurant', required: false })
   description: string;
 
-  @Column()
-  @ApiProperty({ description: 'The address of the restaurant' })
-  address: string;
+  @Column({ nullable: true })
+  @ApiProperty({ description: 'Image URL of the restaurant', required: false })
+  image: string;
 
   @Column({ nullable: true })
-  @ApiProperty({ description: 'Phone number of the restaurant', required: false })
-  phone: string;
+  @ApiProperty({ description: 'Instagram handle of the restaurant', required: false })
+  instagram: string;
 
-  @Column({ nullable: true })
-  @ApiProperty({ description: 'Website URL of the restaurant', required: false })
-  website: string;
-
-  @Column({ type: 'decimal', precision: 10, scale: 8, nullable: true })
-  @ApiProperty({ description: 'Latitude coordinate', required: false })
-  latitude: number;
-
-  @Column({ type: 'decimal', precision: 11, scale: 8, nullable: true })
-  @ApiProperty({ description: 'Longitude coordinate', required: false })
-  longitude: number;
+  @Column({ default: false })
+  @ApiProperty({ description: 'Whether the restaurant is halal', default: false })
+  halal: boolean;
 
   @Column({ type: 'decimal', precision: 3, scale: 2, nullable: true })
   @ApiProperty({ description: 'Average rating of the restaurant', required: false })
@@ -43,6 +37,24 @@ export class Restaurant {
   @Column({ default: 'active' })
   @ApiProperty({ description: 'Status of the restaurant', default: 'active' })
   status: string;
+
+  @Column({ nullable: false })
+  @ApiProperty({ description: 'ID of the user who posted the restaurant', required: true })
+  postedByUserId: number;
+
+  @ManyToOne(() => User, { eager: false })
+  @JoinColumn({ name: 'postedByUserId' })
+  @ApiProperty({ description: 'User who posted the restaurant', type: () => User, required: false })
+  postedBy: User;
+
+  @Column({ nullable: true })
+  @ApiProperty({ description: 'ID of the restaurant address', required: false })
+  addressId: number;
+
+  @ManyToOne(() => Address, address => address.id, { eager: false })
+  @JoinColumn({ name: 'addressId' })
+  @ApiProperty({ description: 'Address of the restaurant', type: () => Address, required: false })
+  address: Address;
 
   @CreateDateColumn()
   @ApiProperty({ description: 'Creation timestamp' })

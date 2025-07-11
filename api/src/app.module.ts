@@ -9,6 +9,7 @@ import { SpecialitiesModule } from './specialities/specialities.module';
 import { FavouritesModule } from './favourites/favourites.module';
 import { CommentsModule } from './comments/comments.module';
 import { AuthModule } from './auth/auth.module';
+import { AddressesModule } from './addresses/addresses.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { AuthModule } from './auth/auth.module';
     FavouritesModule,
     CommentsModule,
     AuthModule,
+    AddressesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

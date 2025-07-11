@@ -24,7 +24,8 @@ export const api = {
       throw new Error(`API call failed: ${response.status} ${response.statusText}`);
     }
     
-    return response.json();
+    const data = await response.json();
+    return data;
   },
   
   // Specialities endpoints
@@ -47,7 +48,10 @@ export const api = {
   // Restaurants endpoints
   restaurants: {
     getAll: () => api.fetch('/restaurants'),
-    getById: (id: number) => api.fetch(`/restaurants/${id}`),
+    getById: (id: number, cacheBuster?: string) => {
+      const url = cacheBuster ? `/restaurants/${id}?${cacheBuster}` : `/restaurants/${id}`;
+      return api.fetch(url);
+    },
     getBySpeciality: (specialityId: number) => api.fetch(`/restaurants?specialityId=${specialityId}`),
     create: (data: any) => api.fetch('/restaurants', {
       method: 'POST',
@@ -76,5 +80,43 @@ export const api = {
       method: 'POST',
     }),
     me: () => api.fetch('/auth/me'),
+    profile: () => api.fetch('/auth/profile'),
+  },
+
+  // Addresses endpoints
+  addresses: {
+    getAll: () => api.fetch('/addresses'),
+    getById: (id: number) => api.fetch(`/addresses/${id}`),
+    create: (data: any) => api.fetch('/addresses', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+    update: (id: number, data: any) => api.fetch(`/addresses/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+    delete: (id: number) => api.fetch(`/addresses/${id}`, {
+      method: 'DELETE',
+    }),
+    // API Adresse integration (French government)
+    searchApiAdresse: (query: string, limit?: number) => api.fetch(`/addresses/search/api-adresse?query=${encodeURIComponent(query)}${limit ? `&limit=${limit}` : ''}`),
+    getApiAdresseAddress: (id: string) => api.fetch(`/addresses/api-adresse/${id}`),
+    createFromApiAdresse: (id: string) => api.fetch(`/addresses/api-adresse/${id}`, {
+      method: 'POST',
+    }),
+    createFromFeature: (feature: any) => api.fetch('/addresses/from-feature', {
+      method: 'POST',
+      body: JSON.stringify(feature),
+    }),
+    searchByCoordinates: (lat: number, lon: number, limit?: number) => api.fetch(`/addresses/search/coordinates?lat=${lat}&lon=${lon}${limit ? `&limit=${limit}` : ''}`),
+  },
+
+  // Users endpoints
+  users: {
+    getById: (id: number) => api.fetch(`/users/${id}`),
+    update: (id: number, data: { firstName?: string; lastName?: string; password?: string }) => api.fetch(`/users/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
   },
 }; 

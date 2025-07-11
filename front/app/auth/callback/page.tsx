@@ -21,9 +21,9 @@ function AuthCallbackContent() {
       
       // Fetch user info using the token
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-      console.log('Fetching user info from:', `${apiUrl}/auth/profile`);
+      console.log('Fetching user info from:', `${apiUrl}/auth/me`);
       
-      fetch(`${apiUrl}/auth/profile`, {
+      fetch(`${apiUrl}/auth/me`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

@@ -19,6 +19,8 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (firstName: string, lastName: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  updateUser: (userData: Partial<User>) => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -72,8 +74,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   };
 
+  const updateUser = (userData: Partial<User>) => {
+    if (user) {
+      const updatedUser = { ...user, ...userData };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    }
+  };
+
+  const refreshUser = async () => {
+    try {
+      const userData = await api.auth.me();
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+    } catch (error) {
+      console.error('Error refreshing user data:', error);
+      // If refresh fails, logout the user
+      logout();
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
