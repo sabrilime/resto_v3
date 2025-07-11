@@ -25,13 +25,37 @@ export const api = {
     }
     
     // Handle empty responses (like DELETE operations that return 204 No Content)
-    const contentType = response.headers.get('content-type');
-    if (response.status === 204 || !contentType || !contentType.includes('application/json')) {
+    if (response.status === 204) {
       return null;
     }
     
-    const data = await response.json();
-    return data;
+    const contentType = response.headers.get('content-type');
+    
+    // If content-type indicates JSON, try to parse as JSON
+    if (contentType && contentType.includes('application/json')) {
+      try {
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.warn('Failed to parse JSON response:', error);
+        return null;
+      }
+    }
+    
+    // If no content-type or not JSON, try to get as text
+    try {
+      const text = await response.text();
+      console.warn('API response not JSON, got text:', text);
+      
+      // Try to parse common boolean responses
+      if (text === 'true') return true;
+      if (text === 'false') return false;
+      
+      return null;
+    } catch (error) {
+      console.warn('Failed to read response as text:', error);
+      return null;
+    }
   },
   
   // Specialities endpoints
@@ -124,5 +148,22 @@ export const api = {
       method: 'PATCH',
       body: JSON.stringify(data),
     }),
+  },
+
+  // Favourites endpoints
+  favourites: {
+    getAll: () => api.fetch('/favourites'),
+    getById: (id: number) => api.fetch(`/favourites/${id}`),
+    create: (data: { restaurantId: number }) => api.fetch('/favourites', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+    delete: (id: number) => api.fetch(`/favourites/${id}`, {
+      method: 'DELETE',
+    }),
+    deleteByRestaurant: (restaurantId: number) => api.fetch(`/favourites/restaurant/${restaurantId}`, {
+      method: 'DELETE',
+    }),
+    check: (restaurantId: number) => api.fetch(`/favourites/check/${restaurantId}`),
   },
 }; 
