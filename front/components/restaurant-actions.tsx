@@ -1,8 +1,10 @@
 'use client';
 
-import { Heart, Edit, Trash2 } from 'lucide-react';
+import { Heart, Edit, Trash2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { api } from '@/lib/api';
 
 interface RestaurantActionsProps {
   restaurantId: number;
@@ -20,6 +22,7 @@ export const RestaurantActions = ({
   className = ''
 }: RestaurantActionsProps) => {
   const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleEdit = () => {
     if (onEdit) {
@@ -30,15 +33,31 @@ export const RestaurantActions = ({
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (onDelete) {
       onDelete(restaurantId);
-    } else {
-      // Default behavior: show confirmation dialog
-      if (confirm('Are you sure you want to delete this restaurant?')) {
-        console.log('Delete restaurant:', restaurantId);
-        // TODO: Implement delete API call
-      }
+      return;
+    }
+
+    // Default behavior: show confirmation dialog
+    if (!confirm('Are you sure you want to delete this restaurant? This action cannot be undone.')) {
+      return;
+    }
+
+    setIsDeleting(true);
+    
+    try {
+      const result = await api.restaurants.delete(restaurantId);
+      console.log('Restaurant deleted successfully', result);
+      
+      // Show success message and redirect to home page
+      alert('Restaurant deleted successfully!');
+      router.push('/');
+    } catch (error) {
+      console.error('Error deleting restaurant:', error);
+      alert('Failed to delete restaurant. Please try again.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -72,8 +91,13 @@ export const RestaurantActions = ({
         size="sm"
         className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
         onClick={handleDelete}
+        disabled={isDeleting}
       >
-        <Trash2 className="h-4 w-4" />
+        {isDeleting ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <Trash2 className="h-4 w-4" />
+        )}
       </Button>
     </div>
   );

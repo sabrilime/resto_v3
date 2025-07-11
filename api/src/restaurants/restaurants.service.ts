@@ -72,6 +72,17 @@ export class RestaurantsService {
     return restaurant;
   }
 
+  async findOneById(id: number): Promise<Restaurant> {
+    const restaurant = await this.restaurantRepository.findOne({
+      where: { id },
+      relations: ['postedBy', 'address', 'specialities'],
+    });
+    if (!restaurant) {
+      throw new NotFoundException(`Restaurant with ID ${id} not found`);
+    }
+    return restaurant;
+  }
+
   async update(id: number, updateRestaurantDto: UpdateRestaurantDto): Promise<Restaurant> {
     console.log('Updating restaurant:', id, 'with data:', updateRestaurantDto);
     
@@ -116,9 +127,29 @@ export class RestaurantsService {
   }
 
   async remove(id: number): Promise<void> {
-    const restaurant = await this.findOne(id);
+    console.log('Deleting restaurant with ID:', id);
+    
+    // Find restaurant regardless of status for deletion
+    const restaurant = await this.restaurantRepository.findOne({
+      where: { id },
+      relations: ['postedBy', 'address', 'specialities'],
+    });
+    
+    if (!restaurant) {
+      throw new NotFoundException(`Restaurant with ID ${id} not found`);
+    }
+    
+    console.log('Found restaurant to delete:', restaurant.name, 'Current status:', restaurant.status);
+    
+    // Check if already deleted
+    if (restaurant.status === 'inactive') {
+      console.log('Restaurant is already deleted');
+      return;
+    }
+    
     restaurant.status = 'inactive';
     await this.restaurantRepository.save(restaurant);
+    console.log('Restaurant deleted successfully (soft delete)');
   }
 
   async search(query: string): Promise<Restaurant[]> {

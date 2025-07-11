@@ -24,6 +24,12 @@ export const api = {
       throw new Error(`API call failed: ${response.status} ${response.statusText}`);
     }
     
+    // Handle empty responses (like DELETE operations that return 204 No Content)
+    const contentType = response.headers.get('content-type');
+    if (response.status === 204 || !contentType || !contentType.includes('application/json')) {
+      return null;
+    }
+    
     const data = await response.json();
     return data;
   },

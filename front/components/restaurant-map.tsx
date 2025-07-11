@@ -9,9 +9,18 @@ interface RestaurantMapProps {
   label?: string;
 }
 
-const GOOGLE_MAPS_API_KEY = "AIzaSyA31CyLfVHI0oxEEcizl7DMgI2DUQ_UlbE";
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
 export function RestaurantMap({ lat, lng, label }: RestaurantMapProps) {
+  if (!GOOGLE_MAPS_API_KEY) {
+    console.error('Google Maps API key is not configured');
+    return (
+      <div className="flex items-center justify-center w-[250px] h-[180px] bg-gray-100 rounded-lg border">
+        <span className="text-gray-500 text-sm">Map not available</span>
+      </div>
+    );
+  }
+
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
   });

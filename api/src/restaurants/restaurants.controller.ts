@@ -88,9 +88,16 @@ export class RestaurantsController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a restaurant (soft delete)' })
-  @ApiResponse({ status: 200, description: 'Restaurant deleted successfully' })
+  @ApiResponse({ status: 200, description: 'Restaurant deleted successfully', schema: { type: 'object', properties: { message: { type: 'string' } } } })
   @ApiResponse({ status: 404, description: 'Restaurant not found' })
-  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.restaurantsService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<{ message: string }> {
+    console.log('Controller received delete request for restaurant:', id);
+    try {
+      await this.restaurantsService.remove(id);
+      return { message: 'Restaurant deleted successfully' };
+    } catch (error) {
+      console.error('Error deleting restaurant:', error);
+      throw error;
+    }
   }
 } 
