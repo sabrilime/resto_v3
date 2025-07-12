@@ -41,10 +41,14 @@ export function RestaurantMap({ lat, lng, label }: RestaurantMapProps) {
       zoom={15}
       options={{ disableDefaultUI: true }}
     >
-      <Marker position={mapCenter} label={label} icon={{
-        url: "https://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
-        scaledSize: { width: 40, height: 40 } as any,
-      }} />
+      <Marker 
+        position={mapCenter} 
+        label={label} 
+        icon={{
+          url: "https://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
+          scaledSize: new google.maps.Size(40, 40),
+        }} 
+      />
     </GoogleMap>
   ) : (
     <div className="flex items-center justify-center w-[250px] h-[180px] bg-gray-100 rounded-lg border">
