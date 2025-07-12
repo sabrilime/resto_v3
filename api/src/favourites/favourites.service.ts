@@ -44,7 +44,7 @@ export class FavouritesService {
   async findAllByUser(userId: number): Promise<Favourite[]> {
     return await this.favouriteRepository.find({
       where: { userId },
-      relations: ['restaurant'],
+      relations: ['restaurant', 'restaurant.address', 'restaurant.specialities'],
       order: { createdAt: 'DESC' }
     });
   }
@@ -52,7 +52,7 @@ export class FavouritesService {
   async findOne(id: number, userId: number): Promise<Favourite> {
     const favourite = await this.favouriteRepository.findOne({
       where: { id, userId },
-      relations: ['restaurant']
+      relations: ['restaurant', 'restaurant.address', 'restaurant.specialities']
     });
     
     if (!favourite) {

@@ -208,7 +208,10 @@ const SpecialityDetailPage = () => {
                         {/* Restaurant Info */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between mb-2">
-                            <h3 className="text-xl font-semibold text-foreground hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer transition-colors">
+                            <h3 
+                              className="text-xl font-semibold text-foreground hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer transition-colors"
+                              onClick={() => router.push(`/restaurant/${restaurant.id}`)}
+                            >
                               {restaurant.name}
                             </h3>
                             <div className="flex items-center gap-2">

@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, Instagram, MapPin, CheckCircle, Truck, Star, XCircle } from 'lucide-react';
 import { RestaurantMap } from '@/components/restaurant-map';
 import { RestaurantActions } from '@/components/restaurant-actions';
+import { RestaurantComments } from '@/components/restaurant-comments';
 
 export default async function RestaurantPage({ 
   params, 
@@ -166,6 +167,11 @@ export default async function RestaurantPage({
             </div>
           )}
         </div>
+      </div>
+      
+      {/* Comments Section */}
+      <div className="mt-8">
+        <RestaurantComments restaurantId={restaurant.id} />
       </div>
     </div>
   );

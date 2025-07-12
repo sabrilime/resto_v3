@@ -13,6 +13,10 @@ export class Comment {
   @ApiProperty({ description: 'The content of the comment' })
   content: string;
 
+  @Column({ type: 'int', nullable: true })
+  @ApiProperty({ description: 'The rating given by the user (1-5)', required: false })
+  rate: number;
+
   @Column()
   @ApiProperty({ description: 'The ID of the user who created the comment' })
   userId: number;

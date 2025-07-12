@@ -5,6 +5,7 @@ import { Comment } from './entities/comment.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Restaurant } from '../restaurants/entities/restaurant.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class CommentsService {
@@ -13,9 +14,20 @@ export class CommentsService {
     private commentRepository: Repository<Comment>,
     @InjectRepository(Restaurant)
     private restaurantRepository: Repository<Restaurant>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   async create(userId: number, createCommentDto: CreateCommentDto): Promise<Comment> {
+    // Check if user exists
+    const user = await this.userRepository.findOne({
+      where: { id: userId }
+    });
+    
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
     // Check if restaurant exists
     const restaurant = await this.restaurantRepository.findOne({
       where: { id: createCommentDto.restaurantId }
