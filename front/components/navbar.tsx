@@ -19,13 +19,11 @@ export const Navbar = () => {
             <div className="flex items-center">
                 <MobileSidebar />
                 <Link href="/">
-                    <h1 className={cn(
-                        "hidden md:block text-xl md:text-3xl font-bold text-primary",
-                        font.className
-                    )}>
-                        Resto-Lover
-                    </h1>
-                    <h4 className="hidden md:block">Ile-de-France</h4>
+                    <img
+                        src="/resto-lover-logo.png"
+                        alt="Resto Lover Logo"
+                        className="hidden md:block h-16 max-w-[220px] w-auto"
+                    />
                 </Link>
             </div>
             <div className="flex items-center gap-x-3">
