@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, BadRequestException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AddressesService } from './addresses.service';
 import { CreateAddressDto } from './dto/create-address.dto';
@@ -29,11 +29,22 @@ export class AddressesController {
     return this.addressesService.findAll();
   }
 
+  @Get('cities')
+  @ApiOperation({ summary: 'Get all unique cities from addresses' })
+  @ApiResponse({ status: 200, description: 'List of unique cities', type: [String] })
+  getAllCities() {
+    return this.addressesService.getAllCities();
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get an address by id' })
   @ApiResponse({ status: 200, description: 'Address found', type: Address })
   findOne(@Param('id') id: string) {
-    return this.addressesService.findOne(+id);
+    const numId = Number(id);
+    if (isNaN(numId)) {
+      throw new BadRequestException('Invalid address ID');
+    }
+    return this.addressesService.findOne(numId);
   }
 
   @Patch(':id')

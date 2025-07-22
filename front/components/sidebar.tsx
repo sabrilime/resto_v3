@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ChefHat, Heart, Home, MapPin, Plus } from "lucide-react";
+import { ChefHat, Heart, MapPin, Plus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 export const Sidebar = () => {
@@ -12,7 +12,7 @@ export const Sidebar = () => {
         {
             icon: MapPin,
             href: "/",
-            label: "Home",
+            label: "Accueil",
             pro: false,
         },
         {
@@ -37,7 +37,6 @@ export const Sidebar = () => {
 
     const onNavigate = (url: string, pro: boolean) => {
         // TODO: check if PRO
-
         return router.push(url);
     }
 

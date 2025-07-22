@@ -3,9 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { Navbar } from "@/components/navbar";
 import { cn } from "@/lib/utils";
 import { AuthWrapper } from "@/components/auth-wrapper";
+import { ConditionalNavbar } from "@/components/conditional-navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,14 +22,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("bg-secondary", inter.className)}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-        >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AuthProvider>
             <AuthWrapper>
-              <Navbar />
+              <ConditionalNavbar />
               {children}
             </AuthWrapper>
           </AuthProvider>

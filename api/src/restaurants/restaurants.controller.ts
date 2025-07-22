@@ -65,6 +65,13 @@ export class RestaurantsController {
     return this.restaurantsService.search(query);
   }
 
+  @Get('by-city/:city')
+  @ApiOperation({ summary: 'Get all restaurants by city name' })
+  @ApiResponse({ status: 200, description: 'List of restaurants in the city', type: [Restaurant] })
+  async findByCity(@Param('city') city: string): Promise<Restaurant[]> {
+    return this.restaurantsService.findByCity(decodeURIComponent(city));
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a restaurant by ID' })
   @ApiResponse({ status: 200, description: 'Restaurant found', type: Restaurant })

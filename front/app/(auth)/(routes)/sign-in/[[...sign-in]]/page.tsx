@@ -40,14 +40,14 @@ export default function SignInPage() {
     <div className="min-h-screen flex items-center justify-center bg-background">
       <Card className="w-96 mx-4">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Sign In</CardTitle>
-          <p className="text-muted-foreground">Welcome back to RestoLover</p>
+          <CardTitle className="text-2xl font-bold">Connexion</CardTitle>
+          <p className="text-muted-foreground">Bon retour sur RestoLover</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-foreground">
-                Email
+                E-mail
               </label>
               <Input
                 id="email"
@@ -56,13 +56,13 @@ export default function SignInPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="mt-1"
-                placeholder="Enter your email"
+                placeholder="Entrez votre e-mail"
               />
             </div>
             
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-foreground">
-                Password
+                Mot de passe
               </label>
               <Input
                 id="password"
@@ -71,7 +71,7 @@ export default function SignInPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 className="mt-1"
-                placeholder="Enter your password"
+                placeholder="Entrez votre mot de passe"
               />
             </div>
 
@@ -86,7 +86,7 @@ export default function SignInPage() {
               disabled={loading}
               className="w-full"
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? 'Connexion en cours...' : 'Connexion'}
             </Button>
 
             <div className="relative my-4">
@@ -94,7 +94,7 @@ export default function SignInPage() {
                 <span className="w-full border-t" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                <span className="bg-background px-2 text-muted-foreground">Ou continuer avec</span>
               </div>
             </div>
 
@@ -122,13 +122,13 @@ export default function SignInPage() {
                   fill="#EA4335"
                 />
               </svg>
-              Sign in with Google
+              Connexion avec Google
             </Button>
 
             <div className="text-center text-sm text-muted-foreground">
-              Don&apos;t have an account?{' '}
+              Vous n&apos;avez pas de compte ?{' '}
               <Link href="/sign-up" className="text-primary hover:text-primary/80">
-                Sign up
+                Inscrivez-vous
               </Link>
             </div>
           </form>

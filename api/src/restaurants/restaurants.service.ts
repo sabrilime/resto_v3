@@ -176,4 +176,16 @@ export class RestaurantsService {
       .orderBy('restaurant.rating', 'DESC')
       .getMany();
   }
+
+  async findByCity(city: string): Promise<Restaurant[]> {
+    return await this.restaurantRepository
+      .createQueryBuilder('restaurant')
+      .leftJoinAndSelect('restaurant.postedBy', 'postedBy')
+      .leftJoinAndSelect('restaurant.address', 'address')
+      .leftJoinAndSelect('restaurant.specialities', 'specialities')
+      .where('LOWER(address.city) = LOWER(:city)', { city })
+      .andWhere('restaurant.status = :status', { status: 'active' })
+      .orderBy('restaurant.rating', 'DESC')
+      .getMany();
+  }
 } 

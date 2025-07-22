@@ -39,7 +39,7 @@ export default function SignUpPage() {
     e.preventDefault();
     
     if (!passwordValidation.isValid) {
-      setError('Please ensure your password meets all requirements');
+      setError("Veuillez vous assurer que votre mot de passe respecte toutes les exigences");
       return;
     }
     
@@ -50,7 +50,7 @@ export default function SignUpPage() {
       await register(firstName, lastName, email, password);
       router.push('/');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed');
+      setError(err instanceof Error ? err.message : "Échec de l'inscription");
     } finally {
       setLoading(false);
     }
@@ -65,15 +65,15 @@ export default function SignUpPage() {
     <div className="min-h-screen flex items-center justify-center bg-background">
       <Card className="w-96 mx-4">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Sign Up</CardTitle>
-          <p className="text-muted-foreground">Create your RestoLover account</p>
+          <CardTitle className="text-2xl font-bold">Inscription</CardTitle>
+          <p className="text-muted-foreground">Créez votre compte RestoLover</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium text-foreground">
-                  First Name
+                  Prénom
                 </label>
                 <Input
                   id="firstName"
@@ -82,13 +82,13 @@ export default function SignUpPage() {
                   onChange={(e) => setFirstName(e.target.value)}
                   required
                   className="mt-1"
-                  placeholder="First name"
+                  placeholder="Prénom"
                 />
               </div>
               
               <div>
                 <label htmlFor="lastName" className="block text-sm font-medium text-foreground">
-                  Last Name
+                  Nom
                 </label>
                 <Input
                   id="lastName"
@@ -97,14 +97,14 @@ export default function SignUpPage() {
                   onChange={(e) => setLastName(e.target.value)}
                   required
                   className="mt-1"
-                  placeholder="Last name"
+                  placeholder="Nom"
                 />
               </div>
             </div>
             
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-foreground">
-                Email
+                E-mail
               </label>
               <Input
                 id="email"
@@ -113,13 +113,13 @@ export default function SignUpPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="mt-1"
-                placeholder="Enter your email"
+                placeholder="Entrez votre e-mail"
               />
             </div>
             
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-foreground">
-                Password
+                Mot de passe
               </label>
               <Input
                 id="password"
@@ -128,12 +128,12 @@ export default function SignUpPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 className="mt-1"
-                placeholder="Enter your password"
+                placeholder="Entrez votre mot de passe"
               />
               
               {/* Password requirements */}
               <div className="mt-2 space-y-1">
-                <div className="text-xs text-muted-foreground">Password requirements:</div>
+                <div className="text-xs text-muted-foreground">Exigences du mot de passe :</div>
                 <div className="flex items-center space-x-2">
                   {passwordValidation.minLength ? (
                     <CheckCircle className="h-3 w-3 text-green-500" />
@@ -141,7 +141,7 @@ export default function SignUpPage() {
                     <XCircle className="h-3 w-3 text-red-500" />
                   )}
                   <span className={`text-xs ${passwordValidation.minLength ? 'text-green-600' : 'text-red-600'}`}>
-                    At least 8 characters
+                    Au moins 8 caractères
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -151,7 +151,7 @@ export default function SignUpPage() {
                     <XCircle className="h-3 w-3 text-red-500" />
                   )}
                   <span className={`text-xs ${passwordValidation.hasUpperCase ? 'text-green-600' : 'text-red-600'}`}>
-                    At least one uppercase letter
+                    Au moins une majuscule
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -161,7 +161,7 @@ export default function SignUpPage() {
                     <XCircle className="h-3 w-3 text-red-500" />
                   )}
                   <span className={`text-xs ${passwordValidation.hasNumber ? 'text-green-600' : 'text-red-600'}`}>
-                    At least one number
+                    Au moins un chiffre
                   </span>
                 </div>
               </div>
@@ -178,7 +178,7 @@ export default function SignUpPage() {
               disabled={loading || !passwordValidation.isValid}
               className="w-full"
             >
-              {loading ? 'Creating account...' : 'Sign Up'}
+              {loading ? 'Création du compte...' : 'Inscription'}
             </Button>
 
             <div className="relative my-4">
@@ -186,7 +186,7 @@ export default function SignUpPage() {
                 <span className="w-full border-t" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                <span className="bg-background px-2 text-muted-foreground">Ou continuer avec</span>
               </div>
             </div>
 
@@ -214,13 +214,13 @@ export default function SignUpPage() {
                   fill="#EA4335"
                 />
               </svg>
-              Sign up with Google
+              Inscription avec Google
             </Button>
 
             <div className="text-center text-sm text-muted-foreground">
-              Already have an account?{' '}
+              Vous avez déjà un compte ?{' '}
               <Link href="/sign-in" className="text-primary hover:text-primary/80">
-                Sign in
+                Connectez-vous
               </Link>
             </div>
           </form>

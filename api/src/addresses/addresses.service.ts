@@ -80,4 +80,21 @@ export class AddressesService {
   async searchByCoordinates(lat: number, lon: number, limit: number = 10): Promise<ApiAdresseFeatureDto[]> {
     return await this.apiAdresseService.searchByCoordinates(lat, lon, limit);
   }
+
+  async getAllCities(): Promise<{ city: string, departement_code: string }[]> {
+    // Get city and the smallest postal_code for each city
+    const result = await this.addressesRepository
+      .createQueryBuilder('address')
+      .select('address.city', 'city')
+      .addSelect('MIN(address.postal_code)', 'postal_code')
+      .groupBy('address.city')
+      .orderBy('MIN(address.postal_code)', 'ASC')
+      .addOrderBy('address.city', 'ASC')
+      .getRawMany();
+    // Return city and first 2 digits of postal_code as departement_code
+    return result.map((row: { city: string, postal_code: string }) => ({
+      city: row.city,
+      departement_code: row.postal_code?.substring(0, 2) || ''
+    }));
+  }
 } 
