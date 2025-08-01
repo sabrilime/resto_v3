@@ -25,6 +25,7 @@ interface Comment {
   createdAt: string;
   rate?: number;
   title?: string;
+  image?: string;
 }
 
 export function RestaurantComments({ restaurantId }: { restaurantId: number }) {
@@ -37,6 +38,7 @@ export function RestaurantComments({ restaurantId }: { restaurantId: number }) {
   const [submitting, setSubmitting] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [refresh, setRefresh] = useState(0);
+  const [image, setImage] = useState<File | null>(null);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -68,19 +70,24 @@ export function RestaurantComments({ restaurantId }: { restaurantId: number }) {
     if (!content.trim()) return;
     setSubmitting(true);
     try {
+      const formData = new FormData();
+      formData.append('restaurantId', restaurantId.toString());
+      formData.append('content', content);
+      formData.append('rate', rating.toString());
+      if (image) {
+        formData.append('image', image);
+      }
+      
       await api.fetch("/comments", {
         method: "POST",
-        body: JSON.stringify({
-          restaurantId,
-          content,
-          rate: rating,
-        }),
+        body: formData,
       });
       setContent("");
       setRating(5);
+      setImage(null);
       setRefresh((r) => r + 1);
     } catch (err) {
-      alert("Failed to submit comment. Please log in.");
+      alert("Failed to submit comment. Please log in."+err);
     } finally {
       setSubmitting(false);
     }
@@ -105,6 +112,12 @@ export function RestaurantComments({ restaurantId }: { restaurantId: number }) {
                 </button>
               ))}
             </div>
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={e => setImage(e.target.files?.[0] || null)}
+              className="mb-2"
+            />
             <Textarea
               placeholder="Partagez votre expérience..."
               value={content}
@@ -163,6 +176,13 @@ export function RestaurantComments({ restaurantId }: { restaurantId: number }) {
                   <span className="text-xs text-muted-foreground ml-auto">{new Date(comment.createdAt).toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' })}</span>
                 </div>
                 <div className="text-foreground whitespace-pre-line mb-1">{comment.content}</div>
+                {comment.image && (
+                  <img
+                    src={comment.image.startsWith('http') ? comment.image : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}${comment.image}`}
+                    alt="Comment image"
+                    className="mt-2 max-h-48 rounded-lg border"
+                  />
+                )}
                 <div className="text-xs text-muted-foreground mt-2">Cet avis est l'opinion subjective d'un membre de RestoLover et non de l'avis de RestoLover.</div>
               </div>
             </div>

@@ -17,6 +17,10 @@ export class Comment {
   @ApiProperty({ description: 'The rating given by the user (1-5)', required: false })
   rate: number;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  @ApiProperty({ description: 'URL or path to the comment image', required: false })
+  image?: string;
+
   @Column()
   @ApiProperty({ description: 'The ID of the user who created the comment' })
   userId: number;

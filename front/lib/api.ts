@@ -7,56 +7,49 @@ export const api = {
   // Helper function to make API calls
   async fetch(endpoint: string, options?: RequestInit) {
     const url = `${this.baseURL}${endpoint}`;
-    
-    // Get token from localStorage if available
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-    
+  
+    const headers = {
+      ...(options?.body instanceof FormData
+        ? {} // Don't set Content-Type manually for FormData
+        : { 'Content-Type': 'application/json' }),
+      ...(token && { 'Authorization': `Bearer ${token}` }),
+      ...options?.headers,
+    };
+  
     const response = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` }),
-        ...options?.headers,
-      },
+      headers,
       ...options,
     });
-    
+  
     if (!response.ok) {
       throw new Error(`API call failed: ${response.status} ${response.statusText}`);
     }
-    
-    // Handle empty responses (like DELETE operations that return 204 No Content)
+  
     if (response.status === 204) {
       return null;
     }
-    
+  
     const contentType = response.headers.get('content-type');
-    
-    // If content-type indicates JSON, try to parse as JSON
     if (contentType && contentType.includes('application/json')) {
       try {
-        const data = await response.json();
-        return data;
+        return await response.json();
       } catch (error) {
         console.warn('Failed to parse JSON response:', error);
         return null;
       }
     }
-    
-    // If no content-type or not JSON, try to get as text
+  
     try {
       const text = await response.text();
-      console.warn('API response not JSON, got text:', text);
-      
-      // Try to parse common boolean responses
       if (text === 'true') return true;
       if (text === 'false') return false;
-      
       return null;
     } catch (error) {
       console.warn('Failed to read response as text:', error);
       return null;
     }
-  },
+  },  
   
   // Specialities endpoints
   specialities: {

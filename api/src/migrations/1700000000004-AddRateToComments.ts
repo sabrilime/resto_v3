@@ -1,4 +1,5 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
+import * as bodyParser from 'body-parser';
 
 export class AddRateToComments1700000000004 implements MigrationInterface {
     name = 'AddRateToComments1700000000004'

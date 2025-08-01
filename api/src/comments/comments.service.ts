@@ -40,6 +40,7 @@ export class CommentsService {
     const comment = this.commentRepository.create({
       ...createCommentDto,
       userId,
+      image: createCommentDto.image, // Save image if provided
     });
 
     return await this.commentRepository.save(comment);
@@ -90,6 +91,9 @@ export class CommentsService {
     }
 
     Object.assign(comment, updateCommentDto);
+    if (updateCommentDto.image !== undefined) {
+      comment.image = updateCommentDto.image;
+    }
     return await this.commentRepository.save(comment);
   }
 

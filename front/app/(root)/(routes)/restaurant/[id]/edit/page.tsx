@@ -50,7 +50,6 @@ interface Speciality {
 interface RestaurantFormData {
   name: string;
   description: string;
-  image: string;
   instagram: string;
   halal: boolean;
   onlyDelivery: boolean;
@@ -71,7 +70,6 @@ export default function EditRestaurantPage() {
   const [formData, setFormData] = useState<RestaurantFormData>({
     name: '',
     description: '',
-    image: '',
     instagram: '',
     halal: false,
     onlyDelivery: false,
@@ -89,7 +87,6 @@ export default function EditRestaurantPage() {
         setFormData({
           name: restaurant.name || '',
           description: restaurant.description || '',
-          image: restaurant.image || '',
           instagram: restaurant.instagram || '',
           halal: restaurant.halal || false,
           onlyDelivery: restaurant.onlyDelivery || false,
@@ -181,7 +178,6 @@ export default function EditRestaurantPage() {
       const payload = {
         name: formData.name.trim(),
         description: formData.description.trim() || undefined,
-        image: formData.image.trim() || undefined,
         instagram: formData.instagram.trim() || undefined,
         halal: formData.halal,
         onlyDelivery: formData.onlyDelivery,
@@ -285,27 +281,6 @@ export default function EditRestaurantPage() {
                 placeholder="Describe your restaurant..."
                 rows={3}
               />
-            </div>
-
-            {/* Image URL */}
-            <div className="space-y-2">
-              <Label htmlFor="image">Image URL</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="image"
-                  value={formData.image}
-                  onChange={(e) => handleInputChange('image', e.target.value)}
-                  placeholder="https://example.com/image.jpg"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  className="flex-shrink-0"
-                >
-                  <Upload className="h-4 w-4" />
-                </Button>
-              </div>
             </div>
 
             {/* Instagram */}

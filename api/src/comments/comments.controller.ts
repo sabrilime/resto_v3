@@ -1,10 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Request, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Comment } from './entities/comment.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+import type { Express } from 'express';
 
 @ApiTags('comments')
 @ApiBearerAuth()
@@ -14,12 +18,42 @@ export class CommentsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('image', {
+    storage: diskStorage({
+      destination: './uploads/comments',
+      filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        cb(null, uniqueSuffix + extname(file.originalname));
+      },
+    }),
+    fileFilter: (req, file, cb) => {
+      if (!file.mimetype.match(/^image\//)) {
+        return cb(new Error('Only image files are allowed!'), false);
+      }
+      cb(null, true);
+    },
+    limits: { fileSize: 10 * 1024 * 1024 }, // <-- Increase this value
+  }))
   @ApiOperation({ summary: 'Create a new comment' })
   @ApiResponse({ status: 201, description: 'Comment created successfully', type: Comment })
   @ApiResponse({ status: 404, description: 'Restaurant not found' })
-  create(@Request() req, @Body() createCommentDto: CreateCommentDto): Promise<Comment> {
-    const userId = req.user?.userId || 1; // Get userId from JWT token
-    return this.commentsService.create(userId, createCommentDto);
+  async create(
+    @Request() req,
+    @Body() createCommentDto: CreateCommentDto,
+    @UploadedFile() file?: any,
+  ): Promise<Comment> {
+    try {
+      console.log('Received DTO:', createCommentDto);
+      console.log('Received file:', file);
+      const userId = req.user?.userId || 1; // Get userId from JWT token
+      if (file) {
+        createCommentDto.image = `/uploads/comments/${file.filename}`;
+      }
+      return await this.commentsService.create(userId, createCommentDto);
+    } catch (error) {
+      console.error('Error in create comment:', error);
+      throw error;
+    }
   }
 
   @Get()
