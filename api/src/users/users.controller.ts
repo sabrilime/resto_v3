@@ -7,12 +7,15 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AdminUpdateUserDto } from './dto/admin-update-user.dto';
 import { User } from './entities/user.entity';
+import { AdminGuard } from '../auth/admin.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -61,5 +64,31 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'User not found' })
   remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.usersService.remove(id);
+  }
+
+  // Admin endpoints
+  @Get('admin/all')
+  @UseGuards(AdminGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get all users (admin only)' })
+  @ApiResponse({ status: 200, description: 'List of all users', type: [User] })
+  @ApiResponse({ status: 403, description: 'Admin access required' })
+  findAllForAdmin(): Promise<User[]> {
+    return this.usersService.findAllForAdmin();
+  }
+
+  @Patch('admin/:id')
+  @UseGuards(AdminGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update a user (admin only)' })
+  @ApiResponse({ status: 200, description: 'User updated successfully', type: User })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 403, description: 'Admin access required' })
+  @ApiResponse({ status: 409, description: 'User with this email already exists' })
+  adminUpdate(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() adminUpdateUserDto: AdminUpdateUserDto,
+  ): Promise<User> {
+    return this.usersService.adminUpdate(id, adminUpdateUserDto);
   }
 } 

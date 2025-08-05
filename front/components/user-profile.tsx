@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, User, Shield } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { UserProfileModal } from './user-profile-modal';
 
@@ -33,6 +33,11 @@ export function UserProfile() {
 
   const handleProfileUpdate = () => {
     setIsProfileModalOpen(true);
+    setIsOpen(false);
+  };
+
+  const handleAdminAccess = () => {
+    router.push('/admin');
     setIsOpen(false);
   };
 
@@ -79,6 +84,15 @@ export function UserProfile() {
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </DropdownMenuItem>
+          {user.role === 'admin' && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleAdminAccess}>
+                <Shield className="mr-2 h-4 w-4" />
+                <span>Admin Dashboard</span>
+              </DropdownMenuItem>
+            </>
+          )}
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleLogout}>
             <LogOut className="mr-2 h-4 w-4" />

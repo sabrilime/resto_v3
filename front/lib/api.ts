@@ -141,6 +141,12 @@ export const api = {
       method: 'PATCH',
       body: JSON.stringify(data),
     }),
+    // Admin endpoints
+    getAllForAdmin: () => api.fetch('/users/admin/all'),
+    adminUpdate: (id: number, data: { firstName?: string; lastName?: string; email?: string; password?: string; role?: 'user' | 'admin'; isActive?: boolean }) => api.fetch(`/users/admin/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
   },
 
   // Favourites endpoints
