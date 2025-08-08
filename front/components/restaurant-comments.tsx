@@ -183,7 +183,7 @@ export function RestaurantComments({ restaurantId }: { restaurantId: number }) {
                     className="mt-2 max-h-48 rounded-lg border"
                   />
                 )}
-                <div className="text-xs text-muted-foreground mt-2">Cet avis est l'opinion subjective d'un membre de RestoLover et non de l'avis de RestoLover.</div>
+                <div className="text-xs text-muted-foreground mt-2">Cet avis est l&apos;opinion subjective d&apos;un membre de RestoLover et non de l&apos;avis de RestoLover.</div>
               </div>
             </div>
           ))}

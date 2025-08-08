@@ -186,7 +186,7 @@ const FavouritesPage = () => {
               </div>
               <h3 className="text-xl font-semibold text-foreground">No favourites yet</h3>
               <p className="text-muted-foreground max-w-md mx-auto">
-                You haven't added any restaurants to your favourites yet. Start exploring and add some restaurants you love!
+                You haven&apos;t added any restaurants to your favourites yet. Start exploring and add some restaurants you love!
               </p>
               <Button 
                 onClick={() => router.push('/')}
@@ -227,7 +227,7 @@ const FavouritesPage = () => {
                                   <span className="text-xs font-medium text-green-700 dark:text-green-400">{favourite.restaurant.rating}</span>
                                 </div>
                               )}
-                              <RestaurantActions restaurantId={favourite.restaurant.id} />
+                              <RestaurantActions restaurantId={favourite.restaurant.id} postedByUserId={favourite.restaurant.postedBy?.id} />
                             </div>
                           </div>
                           

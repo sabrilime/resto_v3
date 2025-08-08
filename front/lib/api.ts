@@ -76,6 +76,8 @@ export const api = {
       return api.fetch(url);
     },
     getBySpeciality: (specialityId: number) => api.fetch(`/restaurants?specialityId=${specialityId}`),
+    search: (query: string) => api.fetch(`/restaurants/search?q=${encodeURIComponent(query)}`),
+    chatbot: (query: string) => api.fetch(`/restaurants/chatbot?q=${encodeURIComponent(query)}`),
     create: (data: any) => api.fetch('/restaurants', {
       method: 'POST',
       body: JSON.stringify(data),

@@ -12,6 +12,10 @@ interface RestaurantMapProps {
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
 export function RestaurantMap({ lat, lng, label }: RestaurantMapProps) {
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+  });
+
   if (!GOOGLE_MAPS_API_KEY) {
     console.error('Google Maps API key is not configured');
     return (
@@ -20,10 +24,6 @@ export function RestaurantMap({ lat, lng, label }: RestaurantMapProps) {
       </div>
     );
   }
-
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
-  });
 
   const mapContainerStyle = { width: '250px', height: '180px', borderRadius: '12px', border: '1px solid #eee' };
 

@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface RestaurantActionsProps {
   restaurantId: number;
+  postedByUserId?: number;
   onFavorite?: (id: number) => void;
   onEdit?: (id: number) => void;
   onDelete?: (id: number) => void;
@@ -16,16 +18,24 @@ interface RestaurantActionsProps {
 
 export const RestaurantActions = ({
   restaurantId,
+  postedByUserId,
   onFavorite,
   onEdit,
   onDelete,
   className = ''
 }: RestaurantActionsProps) => {
   const router = useRouter();
+  const { user } = useAuth();
   const [isDeleting, setIsDeleting] = useState(false);
   const [isFavouriting, setIsFavouriting] = useState(false);
   const [isFavourited, setIsFavourited] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check if user can edit/delete this restaurant
+  const canEditDelete = user && (
+    user.role === 'admin' || 
+    (postedByUserId && user.id === postedByUserId)
+  );
 
   // Function to refresh favourite status
   const refreshFavouriteStatus = async () => {
@@ -68,7 +78,7 @@ export const RestaurantActions = ({
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
-  }, [restaurantId]);
+  }, [restaurantId, refreshFavouriteStatus]);
 
   const handleEdit = () => {
     if (onEdit) {
@@ -164,40 +174,48 @@ export const RestaurantActions = ({
         variant="ghost"
         size="sm"
         className={`h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600 ${
-          isFavourited ? 'text-red-500' : 
-          isAuthenticated ? 'text-gray-400' : 'text-gray-300'
+          isFavourited ? "text-red-500" : 
+          isAuthenticated ? "text-gray-400" : "text-gray-300"
         }`}
         onClick={handleFavorite}
         disabled={isFavouriting}
-        title={isAuthenticated ? 'Add to favourites' : 'Log in to add to favourites'}
+        title={isAuthenticated ? "Add to favourites" : "Log in to add to favourites"}
       >
         {isFavouriting ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
-          <Heart className={`h-4 w-4 ${isFavourited ? 'fill-current' : ''}`} />
+          <Heart className={`h-4 w-4 ${isFavourited ? "fill-current" : ""}`} />
         )}
       </Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        className="h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600"
-        onClick={handleEdit}
-      >
-        <Edit className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
-        onClick={handleDelete}
-        disabled={isDeleting}
-      >
-        {isDeleting ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <Trash2 className="h-4 w-4" />
-        )}
-      </Button>
+      
+      {/* Edit and Delete buttons - only show for admin or restaurant creator */}
+      {canEditDelete && (
+        <>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600"
+            onClick={handleEdit}
+            title="Edit restaurant"
+          >
+            <Edit className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
+            onClick={handleDelete}
+            disabled={isDeleting}
+            title="Delete restaurant"
+          >
+            {isDeleting ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Trash2 className="h-4 w-4" />
+            )}
+          </Button>
+        </>
+      )}
     </div>
   );
 }; 

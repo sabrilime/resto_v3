@@ -1,6 +1,6 @@
 "use client";
 
-import { SearchInput } from "@/components/search-input";
+import { ChatbotSearchInput } from "@/components/chatbot-search-input";
 import { Suspense, useEffect, useState } from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
@@ -39,7 +39,7 @@ const RootPage = () => {
                     <div className="pl-10 bg-primary/10 h-10 rounded-md animate-pulse bg-gray-200" />
                 </div>
             }>
-                <SearchInput />
+                <ChatbotSearchInput />
             </Suspense>
 
             {/* Cities Section */}

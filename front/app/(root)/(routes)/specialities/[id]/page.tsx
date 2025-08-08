@@ -221,7 +221,7 @@ const SpecialityDetailPage = () => {
                                   <span className="text-xs font-medium text-green-700 dark:text-green-400">{restaurant.rating}</span>
                                 </div>
                               )}
-                              <RestaurantActions restaurantId={restaurant.id} />
+                              <RestaurantActions restaurantId={restaurant.id} postedByUserId={restaurant.postedBy?.id} />
                             </div>
                           </div>
                           

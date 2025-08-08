@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { RestaurantsService } from './restaurants.service';
+import { ChatbotService } from './chatbot.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { Restaurant } from './entities/restaurant.entity';
@@ -24,7 +25,10 @@ import { ApiProperty } from '@nestjs/swagger';
 @ApiTags('restaurants')
 @Controller('restaurants')
 export class RestaurantsController {
-  constructor(private readonly restaurantsService: RestaurantsService) {}
+  constructor(
+    private readonly restaurantsService: RestaurantsService,
+    private readonly chatbotService: ChatbotService,
+  ) {}
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
@@ -63,6 +67,20 @@ export class RestaurantsController {
   @ApiResponse({ status: 200, description: 'Search results', type: [Restaurant] })
   search(@Query('q') query: string): Promise<Restaurant[]> {
     return this.restaurantsService.search(query);
+  }
+
+  @Get('chatbot')
+  @ApiOperation({ summary: 'Chatbot endpoint for natural language restaurant search' })
+  @ApiQuery({ name: 'q', description: 'Natural language query (e.g., "restaurants italiens paris")' })
+  @ApiResponse({ status: 200, description: 'Chatbot search results', schema: { 
+    type: 'object', 
+    properties: { 
+      restaurants: { type: 'array', items: { $ref: '#/components/schemas/Restaurant' } },
+      message: { type: 'string' }
+    } 
+  }})
+  async chatbot(@Query('q') query: string): Promise<{ restaurants: Restaurant[]; message: string }> {
+    return this.chatbotService.processQuery(query);
   }
 
   @Get('by-city/:city')
