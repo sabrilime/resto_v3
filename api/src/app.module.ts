@@ -19,18 +19,47 @@ import { AddressesModule } from './addresses/addresses.module';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: configService.get('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_DATABASE'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: configService.get('NODE_ENV') === 'development',
-        logging: configService.get('NODE_ENV') === 'development',
-      }),
       inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        const nodeEnv = config.get<string>('NODE_ENV') ?? 'development';
+        const isDev = nodeEnv === 'development';
+
+        // If a single DATABASE_URL is provided, prefer it (perfect for Neon)
+        const url = config.get<string>('DATABASE_URL');
+
+        // Enable SSL automatically for Neon or if DB_SSL=true
+        const sslRequested =
+          (url && url.includes('neon.tech')) ||
+          config.get<string>('DB_SSL') === 'true';
+
+        // Common options
+        const base = {
+          type: 'postgres' as const,
+          entities: [__dirname + '/**/*.entity{.ts,.js}'],
+          synchronize: isDev,              // false in production
+          logging: isDev,
+          // Neon requires SSL; using rejectUnauthorized:false is fine here
+          ...(sslRequested ? { ssl: { rejectUnauthorized: false } } : {}),
+        };
+
+        // URL mode (Neon / any hosted PG)
+        if (url) {
+          return {
+            ...base,
+            url, // e.g. postgresql://USER:PASS@HOST.neon.tech/DB?sslmode=require
+          };
+        }
+
+        // Separate var mode (local/dev)
+        return {
+          ...base,
+          host: config.get<string>('DB_HOST'),
+          port: Number(config.get<string>('DB_PORT') ?? 5432),
+          username: config.get<string>('DB_USERNAME'),
+          password: config.get<string>('DB_PASSWORD'),
+          database: config.get<string>('DB_DATABASE'),
+        };
+      },
     }),
     RestaurantsModule,
     UsersModule,
@@ -43,4 +72,4 @@ import { AddressesModule } from './addresses/addresses.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {} 
+export class AppModule {}

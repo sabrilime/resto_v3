@@ -110,7 +110,7 @@ export const ChatbotSearchInput = () => {
                     onChange={onChange}
                     onKeyPress={handleKeyPress}
                     value={value}
-                    placeholder={isChatbotMode ? "Ex: restaurants italiens paris, sushi lyon..." : "Search..."}
+                    placeholder={isChatbotMode ? "Ex: restaurants italiens paris, sushi lyon..." : "Rechercher..."}
                     className="pl-10 bg-primary/10 pr-20"
                 />
                 <div className="absolute right-2 top-2 flex gap-2">
