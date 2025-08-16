@@ -5,6 +5,9 @@ services:
     image: caddy:2
     restart: unless-stopped
     ports: ["80:80", "443:443"]
+    environment:
+      - APP_DOMAIN=${APP_DOMAIN}
+      - API_DOMAIN=${API_DOMAIN}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
@@ -14,39 +17,19 @@ services:
   front:
     build:
       context: .
-    # build front/Dockerfile
       dockerfile: front/Dockerfile
-    env_file: ./front/.env.production
     restart: unless-stopped
+    env_file:
+      - ./front/.env.production
 
   api:
     build:
       context: .
       dockerfile: api/Dockerfile
-    env_file: ./api/.env.production
     restart: unless-stopped
-
-  postgres:
-    image: postgres:16
-    restart: unless-stopped
-    env_file: ./db/.env
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  pgbackups:
-    image: postgres:16
-    depends_on: [postgres]
-    env_file: ./db/.env
-    volumes:
-      - ./db/backups:/backups
-    entrypoint: ["bash","-lc","while true; do PGPASSWORD=$${POSTGRES_PASSWORD} pg_dump -h postgres -U $${POSTGRES_USER} -d $${POSTGRES_DB} | gzip > /backups/backup-$(date +%F).sql.gz; find /backups -type f -mtime +7 -delete; sleep 86400; done"]
+    env_file:
+      - ./api/.env.production
 
 volumes:
   caddy_data:
   caddy_config:
-  pgdata:
