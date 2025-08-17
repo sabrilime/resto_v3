@@ -88,7 +88,7 @@ const FavouritesPage = () => {
         // Check if user is authenticated
         const token = localStorage.getItem('token');
         if (!token) {
-          setError('Please log in to view your favourites');
+          setError('Veuillez vous connecter pour voir vos favoris');
           setLoading(false);
           return;
         }
@@ -98,9 +98,9 @@ const FavouritesPage = () => {
         setFavourites(favouritesData);
       } catch (err) {
         if (err instanceof Error && err.message.includes('401')) {
-          setError('Please log in to view your favourites');
+          setError('Veuillez vous connecter pour voir vos favoris');
         } else {
-          setError(err instanceof Error ? err.message : 'An error occurred');
+          setError(err instanceof Error ? err.message : 'Une erreur s\'est produite');
         }
       } finally {
         setLoading(false);
@@ -115,7 +115,7 @@ const FavouritesPage = () => {
       <div className="min-h-screen bg-background">
         <div className="max-w-6xl mx-auto px-4 py-8">
           <div className="flex items-center justify-center h-64">
-            <div className="text-lg text-foreground">Loading favourites...</div>
+            <div className="text-lg text-foreground">Chargement des favoris...</div>
           </div>
         </div>
       </div>
@@ -127,7 +127,7 @@ const FavouritesPage = () => {
       <div className="min-h-screen bg-background">
         <div className="max-w-6xl mx-auto px-4 py-8">
           <div className="flex items-center justify-center h-64">
-            <div className="text-lg text-destructive">Error: {error}</div>
+            <div className="text-lg text-destructive">Erreur : {error}</div>
           </div>
         </div>
       </div>
@@ -147,7 +147,7 @@ const FavouritesPage = () => {
               className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back
+              Retour
             </Button>
           </div>
           
@@ -157,9 +157,9 @@ const FavouritesPage = () => {
                 <Heart className="h-6 w-6 text-red-600 dark:text-red-400" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-foreground">My Favourites</h1>
+                <h1 className="text-3xl font-bold text-foreground">Mes Favoris</h1>
                 <p className="text-muted-foreground mt-1">
-                  {favourites.length} favourite{favourites.length !== 1 ? 's' : ''} found
+                  {favourites.length} favori{favourites.length !== 1 ? 's' : ''} trouvé{favourites.length !== 1 ? 's' : ''}
                 </p>
               </div>
             </div>
@@ -167,11 +167,11 @@ const FavouritesPage = () => {
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Users className="h-4 w-4" />
-                <span>{favourites.length} locations</span>
+                <span>{favourites.length} établissement{favourites.length !== 1 ? 's' : ''}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Star className="h-4 w-4 text-yellow-400" />
-                <span>Your saved restaurants</span>
+                <span>Vos restaurants sauvegardés</span>
               </div>
             </div>
           </div>
@@ -184,15 +184,15 @@ const FavouritesPage = () => {
               <div className="p-4 bg-muted rounded-full w-16 h-16 mx-auto flex items-center justify-center">
                 <Heart className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-semibold text-foreground">No favourites yet</h3>
+              <h3 className="text-xl font-semibold text-foreground">Aucun favori pour le moment</h3>
               <p className="text-muted-foreground max-w-md mx-auto">
-                You haven&apos;t added any restaurants to your favourites yet. Start exploring and add some restaurants you love!
+                Vous n'avez pas encore ajouté de restaurants à vos favoris. Commencez à explorer et ajoutez des restaurants que vous aimez !
               </p>
               <Button 
                 onClick={() => router.push('/')}
                 className="mt-4"
               >
-                Explore Restaurants
+                Explorer les Restaurants
               </Button>
             </div>
           </div>
@@ -235,7 +235,7 @@ const FavouritesPage = () => {
                           <div className="flex items-start gap-2 mb-3">
                             <MapPin className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                             <span className="text-muted-foreground text-sm leading-relaxed">
-                              {favourite.restaurant.address ? formatAddress(favourite.restaurant.address) : 'No address available'}
+                              {favourite.restaurant.address ? formatAddress(favourite.restaurant.address) : 'Aucune adresse disponible'}
                             </span>
                           </div>
                           
@@ -274,4 +274,4 @@ const FavouritesPage = () => {
   );
 };
 
-export default FavouritesPage; 
+export default FavouritesPage;

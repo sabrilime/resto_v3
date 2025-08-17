@@ -87,7 +87,7 @@ const SpecialityDetailPage = () => {
         const restaurantsData = await api.restaurants.getBySpeciality(parseInt(specialityId));
         setRestaurants(restaurantsData);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        setError(err instanceof Error ? err.message : 'Une erreur s\'est produite');
       } finally {
         setLoading(false);
       }
@@ -103,7 +103,7 @@ const SpecialityDetailPage = () => {
       <div className="min-h-screen bg-background">
         <div className="max-w-6xl mx-auto px-4 py-8">
           <div className="flex items-center justify-center h-64">
-            <div className="text-lg text-foreground">Loading restaurants...</div>
+            <div className="text-lg text-foreground">Chargement des restaurants...</div>
           </div>
         </div>
       </div>
@@ -115,7 +115,7 @@ const SpecialityDetailPage = () => {
       <div className="min-h-screen bg-background">
         <div className="max-w-6xl mx-auto px-4 py-8">
           <div className="flex items-center justify-center h-64">
-            <div className="text-lg text-destructive">Error: {error}</div>
+            <div className="text-lg text-destructive">Erreur : {error}</div>
           </div>
         </div>
       </div>
@@ -127,7 +127,7 @@ const SpecialityDetailPage = () => {
       <div className="min-h-screen bg-background">
         <div className="max-w-6xl mx-auto px-4 py-8">
           <div className="flex items-center justify-center h-64">
-            <div className="text-lg text-foreground">Speciality not found</div>
+            <div className="text-lg text-foreground">Spécialité non trouvée</div>
           </div>
         </div>
       </div>
@@ -147,7 +147,7 @@ const SpecialityDetailPage = () => {
               className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back
+              Retour
             </Button>
           </div>
           
@@ -159,7 +159,7 @@ const SpecialityDetailPage = () => {
               <div>
                 <h1 className="text-3xl font-bold text-foreground">{speciality.name}</h1>
                 <p className="text-muted-foreground mt-1">
-                  {restaurants.length} restaurant{restaurants.length !== 1 ? 's' : ''} found
+                  {restaurants.length} restaurant{restaurants.length !== 1 ? 's' : ''} trouvé{restaurants.length !== 1 ? 's' : ''}
                 </p>
               </div>
             </div>
@@ -167,11 +167,11 @@ const SpecialityDetailPage = () => {
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Users className="h-4 w-4" />
-                <span>{restaurants.length} locations</span>
+                <span>{restaurants.length} établissement{restaurants.length !== 1 ? 's' : ''}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Star className="h-4 w-4 text-yellow-400" />
-                <span>Top rated restaurants</span>
+                <span>Restaurants les mieux notés</span>
               </div>
             </div>
           </div>
@@ -184,9 +184,9 @@ const SpecialityDetailPage = () => {
               <div className="p-4 bg-muted rounded-full w-16 h-16 mx-auto flex items-center justify-center">
                 <Utensils className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-semibold text-foreground">No restaurants found</h3>
+              <h3 className="text-xl font-semibold text-foreground">Aucun restaurant trouvé</h3>
               <p className="text-muted-foreground max-w-md mx-auto">
-                No restaurants with this speciality have been added yet. Check back later or add a new restaurant.
+                Aucun restaurant avec cette spécialité n'a encore été ajouté. Revenez plus tard ou ajoutez un nouveau restaurant.
               </p>
             </div>
           </div>
@@ -229,7 +229,7 @@ const SpecialityDetailPage = () => {
                           <div className="flex items-start gap-2 mb-3">
                             <MapPin className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                             <span className="text-muted-foreground text-sm leading-relaxed">
-                              {restaurant.address ? formatAddress(restaurant.address) : 'No address available'}
+                              {restaurant.address ? formatAddress(restaurant.address) : 'Aucune adresse disponible'}
                             </span>
                           </div>
                           
@@ -268,4 +268,4 @@ const SpecialityDetailPage = () => {
   );
 };
 
-export default SpecialityDetailPage; 
+export default SpecialityDetailPage;
