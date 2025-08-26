@@ -82,7 +82,7 @@ export function UserProfile() {
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleProfileUpdate}>
             <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+            <span>Profil</span>
           </DropdownMenuItem>
           {user.role === 'admin' && (
             <>
@@ -96,7 +96,7 @@ export function UserProfile() {
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleLogout}>
             <LogOut className="mr-2 h-4 w-4" />
-            <span>Log out</span>
+            <span>Se déconnecter</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

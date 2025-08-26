@@ -69,20 +69,20 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
 
     // Don't allow updates for Google users
     if (isGoogleUser) {
-      setError('Profile updates are not available for Google-connected accounts');
+      setError("Les mises à jour du profil ne sont pas disponibles pour les comptes connectés à Google");
       setLoading(false);
       return;
     }
 
     // Validate password if provided
     if (formData.password && formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError('Les mots de passe ne correspondent pas');
       setLoading(false);
       return;
     }
 
     if (formData.password && formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
+      setError('Le mot de passe doit contenir au moins 6 caracteres');
       setLoading(false);
       return;
     }
@@ -112,7 +112,7 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
         setFormData(prev => ({ ...prev, password: '', confirmPassword: '' }));
       }, 1500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update profile');
+      setError(err instanceof Error ? err.message : 'Echec de la mise a jour du profil');
     } finally {
       setLoading(false);
     }
@@ -124,15 +124,15 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Profile Information</DialogTitle>
+            <DialogTitle>Informations du profil</DialogTitle>
             <DialogDescription>
-              Your profile information from Google. Updates are not available for Google-connected accounts.
+              Vos informations de profil depuis Google. Les mises a jour ne sont pas disponibles pour les comptes connectes a Google.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firstName" className="text-muted-foreground">First Name</Label>
+                <Label htmlFor="firstName" className="text-muted-foreground">Prenom</Label>
                 <Input
                   id="firstName"
                   value={user?.firstName || ''}
@@ -142,7 +142,7 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="lastName" className="text-muted-foreground">Last Name</Label>
+                <Label htmlFor="lastName" className="text-muted-foreground">Nom</Label>
                 <Input
                   id="lastName"
                   value={user?.lastName || ''}
@@ -154,7 +154,7 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-muted-foreground">Email</Label>
+              <Label htmlFor="email" className="text-muted-foreground">E-mail</Label>
               <Input
                 id="email"
                 value={user?.email || ''}
@@ -167,7 +167,7 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
             <div className="flex items-center space-x-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
               <p className="text-sm text-blue-700 font-medium">
-                Connected with Google - Profile managed by Google account
+                Connecte avec Google - Profil gere par votre compte Google
               </p>
             </div>
             
@@ -175,14 +175,14 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
             
             <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
               <p className="text-sm text-amber-700">
-                <strong>Note:</strong> Profile information cannot be edited for Google-connected accounts. 
-                To update your information, please modify your Google account settings.
+                <strong>Note :</strong> Les informations du profil ne peuvent pas etre modifiees pour les comptes connectes a Google.
+                Pour mettre a jour vos informations, veuillez modifier les parametres de votre compte Google.
               </p>
             </div>
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={onClose}>
-                Close
+                Fermer
               </Button>
             </DialogFooter>
           </div>
@@ -196,15 +196,15 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit Profile</DialogTitle>
+          <DialogTitle>Modifier le profil</DialogTitle>
           <DialogDescription>
-            Update your profile information. Email cannot be changed.
+            Mettez a jour vos informations de profil. L'e-mail ne peut pas etre modifie.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName">Prenom</Label>
               <Input
                 id="firstName"
                 value={formData.firstName}
@@ -213,7 +213,7 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName">Nom</Label>
               <Input
                 id="lastName"
                 value={formData.lastName}
@@ -224,7 +224,7 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">E-mail</Label>
             <Input
               id="email"
               value={user?.email || ''}
@@ -232,30 +232,30 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
               className="bg-muted"
             />
             <p className="text-xs text-muted-foreground">
-              Email cannot be changed
+              L'e-mail ne peut pas etre modifie
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">New Password (optional)</Label>
+            <Label htmlFor="password">Nouveau mot de passe (optionnel)</Label>
             <Input
               id="password"
               type="password"
               value={formData.password}
               onChange={(e) => handleInputChange('password', e.target.value)}
-              placeholder="Leave blank to keep current password"
+              placeholder="Laissez vide pour conserver le mot de passe actuel"
             />
           </div>
 
           {formData.password && (
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <Label htmlFor="confirmPassword">Confirmez le nouveau mot de passe</Label>
               <Input
                 id="confirmPassword"
                 type="password"
                 value={formData.confirmPassword}
                 onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                placeholder="Confirm your new password"
+                placeholder="Confirmez votre nouveau mot de passe"
               />
             </div>
           )}
@@ -268,16 +268,16 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
 
           {success && (
             <div className="text-sm text-green-500 bg-green-50 p-2 rounded">
-              Profile updated successfully!
+              Profil mis a jour avec succes !
             </div>
           )}
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
+              Annuler
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? 'Updating...' : 'Update Profile'}
+              {loading ? 'Mise a jour...' : 'Mettre a jour le profil'}
             </Button>
           </DialogFooter>
         </form>

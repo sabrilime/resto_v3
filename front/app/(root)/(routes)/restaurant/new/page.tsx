@@ -115,7 +115,7 @@ export default function NewRestaurantPage() {
         onlyDelivery: createdAddress.onlyDelivery || false
       }));
     } catch (err) {
-      setError('Failed to save address. Please try again.');
+      setError("Échec de l'enregistrement de l'adresse. Veuillez réessayer.");
       console.error('Error creating address:', err);
     } finally {
       setLoading(false);
@@ -126,12 +126,12 @@ export default function NewRestaurantPage() {
     e.preventDefault();
     
     if (!formData.name.trim()) {
-      setError('Restaurant name is required');
+      setError('Le nom du restaurant est requis');
       return;
     }
 
     if (!selectedAddress) {
-      setError('Please select an address');
+      setError('Veuillez sélectionner une adresse');
       return;
     }
 
@@ -161,7 +161,7 @@ export default function NewRestaurantPage() {
       // Redirect to the new restaurant page
       router.push(`/restaurant/${newRestaurant.id}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create restaurant');
+      setError(err instanceof Error ? err.message : 'Échec de la création du restaurant');
       console.error('Error creating restaurant:', err);
     } finally {
       setLoading(false);
@@ -178,25 +178,25 @@ export default function NewRestaurantPage() {
           className="flex items-center gap-2"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back
+          Retour
         </Button>
-        <h1 className="text-2xl font-bold">Create New Restaurant</h1>
+        <h1 className="text-2xl font-bold">Créer un nouveau restaurant</h1>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Restaurant Information</CardTitle>
+          <CardTitle>Informations du restaurant</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Restaurant Name */}
             <div className="space-y-2">
-              <Label htmlFor="name">Restaurant Name *</Label>
+              <Label htmlFor="name">Nom du restaurant *</Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                placeholder="Enter restaurant name"
+                placeholder="Entrez le nom du restaurant"
                 required
               />
             </div>
@@ -208,19 +208,19 @@ export default function NewRestaurantPage() {
                 id="description"
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
-                placeholder="Describe your restaurant..."
+                placeholder="Décrivez votre restaurant..."
                 rows={3}
               />
             </div>
 
             {/* Instagram */}
             <div className="space-y-2">
-              <Label htmlFor="instagram">Instagram Handle</Label>
+              <Label htmlFor="instagram">Compte Instagram</Label>
               <Input
                 id="instagram"
                 value={formData.instagram}
                 onChange={(e) => handleInputChange('instagram', e.target.value)}
-                placeholder="@restaurant_name"
+                placeholder="@nom_du_restaurant"
               />
             </div>
 
@@ -231,7 +231,7 @@ export default function NewRestaurantPage() {
                 checked={formData.halal}
                 onCheckedChange={(checked) => handleInputChange('halal', checked as boolean)}
               />
-              <Label htmlFor="halal">Halal Restaurant</Label>
+              <Label htmlFor="halal">Restaurant halal</Label>
             </div>
 
             {/* Only Delivery Checkbox */}
@@ -241,23 +241,23 @@ export default function NewRestaurantPage() {
                 checked={formData.onlyDelivery}
                 onCheckedChange={(checked) => handleInputChange('onlyDelivery', checked as boolean)}
               />
-              <Label htmlFor="onlyDelivery">Delivery Only</Label>
+              <Label htmlFor="onlyDelivery">Livraison uniquement</Label>
             </div>
 
             {/* Address Search */}
             <div className="space-y-2">
-              <Label>Address *</Label>
+              <Label>Adresse *</Label>
               <AddressSearch
                 onAddressSelect={handleAddressSelect}
-                placeholder="Search for restaurant address..."
+                placeholder="Recherchez l’adresse du restaurant..."
               />
               {selectedAddress && (
                 <div className="p-3 bg-gray-50 rounded-lg text-sm">
-                  <p className="font-medium">Selected Address:</p>
+                  <p className="font-medium">Adresse sélectionnée :</p>
                   <p>{selectedAddress.properties.label}</p>
                   {formData.addressId && (
                     <p className="text-green-600 text-xs mt-1">
-                      ✓ Address saved to database
+                      ✓ Adresse enregistrée dans la base de données
                     </p>
                   )}
                 </div>
@@ -266,7 +266,7 @@ export default function NewRestaurantPage() {
 
             {/* Specialities Selection */}
             <div className="space-y-2">
-              <Label>Specialities</Label>
+              <Label>Spécialités</Label>
               <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border rounded-lg p-3">
                 {specialities.map((speciality) => (
                   <div key={speciality.id} className="flex items-center space-x-2">
@@ -285,7 +285,7 @@ export default function NewRestaurantPage() {
                 ))}
               </div>
               {specialities.length === 0 && (
-                <p className="text-sm text-gray-500">Loading specialities...</p>
+                <p className="text-sm text-gray-500">Chargement des spécialités...</p>
               )}
             </div>
 
@@ -305,10 +305,10 @@ export default function NewRestaurantPage() {
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Creating Restaurant...
+                  Création du restaurant...
                 </>
               ) : (
-                'Create Restaurant'
+                'Créer le restaurant'
               )}
             </Button>
           </form>
