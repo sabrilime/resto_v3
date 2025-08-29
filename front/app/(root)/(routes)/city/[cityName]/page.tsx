@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, MapPin } from "lucide-react";
+import { Star, MapPin, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -54,6 +55,15 @@ const CityRestaurantsPage = () => {
 
   return (
     <div className="h-full p-4 space-y-4">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => router.back()}
+        className="flex items-center gap-2"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Retour
+      </Button>
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Restaurants à {cityName}</h1>
         <Badge variant="secondary">{restaurants.length} restaurants</Badge>

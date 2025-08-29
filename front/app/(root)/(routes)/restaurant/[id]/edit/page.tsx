@@ -176,6 +176,7 @@ export default function EditRestaurantPage() {
 
     try {
       const payload = {
+        restaurantId: restaurantId,
         name: formData.name.trim(),
         description: formData.description.trim() || undefined,
         instagram: formData.instagram.trim() || undefined,
