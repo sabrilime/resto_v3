@@ -71,7 +71,7 @@ export default function RestaurantPage() {
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back
+          Retour
         </Button>
         <h1 className="text-2xl font-bold mt-4">Restaurant Not Found</h1>
         <p className="text-red-500 mt-2">{error || "Could not load restaurant information."}</p>
@@ -111,7 +111,7 @@ export default function RestaurantPage() {
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back
+          Retour
         </Button>
         <RestaurantActions restaurantId={restaurant.id} postedByUserId={restaurant.postedByUserId} />
       </div>

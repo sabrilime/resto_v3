@@ -87,14 +87,15 @@ export class AddressesService {
       .createQueryBuilder('address')
       .select('address.city', 'city')
       .addSelect('MIN(address.postal_code)', 'postal_code')
+      .addSelect("SUBSTRING(MIN(address.postal_code), 1, 2)", "departement_code")
       .groupBy('address.city')
-      .orderBy('MIN(address.postal_code)', 'ASC')
+      .orderBy('departement_code', 'ASC')
       .addOrderBy('address.city', 'ASC')
       .getRawMany();
     // Return city and first 2 digits of postal_code as departement_code
-    return result.map((row: { city: string, postal_code: string }) => ({
+    return result.map((row: { city: string; postal_code: string; departement_code: string }) => ({
       city: row.city,
-      departement_code: row.postal_code?.substring(0, 2) || ''
+      departement_code: row.departement_code
     }));
   }
 } 

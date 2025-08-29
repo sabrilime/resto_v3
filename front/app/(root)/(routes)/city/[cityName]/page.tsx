@@ -36,7 +36,13 @@ const CityRestaurantsPage = () => {
         const res = await fetch(`${API_URL}/restaurants/by-city/${encodeURIComponent(cityName)}`);
         if (!res.ok) throw new Error("Failed to fetch restaurants");
         const data = await res.json();
-        setRestaurants(data);
+        // Sort restaurants by name (A→Z), ignoring case/accents
+        const sorted = Array.isArray(data)
+          ? [...data].sort((a, b) =>
+              (a?.name || '').localeCompare(b?.name || '', 'fr', { sensitivity: 'base' })
+            )
+          : [];
+        setRestaurants(sorted);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
