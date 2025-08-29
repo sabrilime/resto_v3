@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ChefHat, Heart, MapPin, Plus } from "lucide-react";
+import { ChefHat, Heart, MapPin, Plus, Map } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 export const Sidebar = () => {
@@ -10,7 +10,7 @@ export const Sidebar = () => {
 
     const routes = [
         {
-            icon: MapPin,
+            icon: Map,
             href: "/",
             label: "Accueil",
             pro: false,
@@ -31,6 +31,12 @@ export const Sidebar = () => {
             icon: Heart,
             href: "/favourites",
             label: "Favoris",
+            pro: false,
+        },
+        {
+            icon: MapPin,
+            href: "/nearby",
+            label: "Proximité",
             pro: false,
         },
     ];
