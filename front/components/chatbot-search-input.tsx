@@ -43,6 +43,7 @@ export const ChatbotSearchInput = () => {
     const [chatbotResults, setChatbotResults] = useState<ChatbotResponse | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [showResults, setShowResults] = useState(false);
+    const [autoTriggered, setAutoTriggered] = useState(false);
     const debouncedValue = useDebounce<string>(value, 500);
 
     const onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -97,6 +98,15 @@ export const ChatbotSearchInput = () => {
         }
     };
 
+    const handleFocus = () => {
+        // Switch to chatbot mode on focus and trigger a search once if there is input
+        if (!isChatbotMode) setIsChatbotMode(true);
+        if (!autoTriggered && value.trim()) {
+            setAutoTriggered(true);
+            handleChatbotSearch();
+        }
+    };
+
     const handleRestaurantClick = (restaurantId: number) => {
         router.push(`/restaurant/${restaurantId}`);
         setShowResults(false);
@@ -109,6 +119,7 @@ export const ChatbotSearchInput = () => {
                 <Input 
                     onChange={onChange}
                     onKeyPress={handleKeyPress}
+                    onFocus={handleFocus}
                     value={value}
                     placeholder={isChatbotMode ? "Ex: restaurants italiens paris, sushi lyon..." : "Rechercher..."}
                     className="pl-10 bg-primary/10 pr-20"

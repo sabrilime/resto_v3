@@ -96,3 +96,7 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp.env.production
+
+# deploy
+DEPLOYMENT.md
+front/.vercelignore

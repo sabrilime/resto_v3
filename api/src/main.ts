@@ -4,10 +4,16 @@ import { AppModule } from './app.module';
 import { join } from 'path';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const isProd = process.env.NODE_ENV === 'production';
+  const loggerLevels: (keyof typeof Logger['prototype'])[] = isProd
+    ? ['error', 'warn', 'log']
+    : ['error', 'warn', 'log', 'debug', 'verbose'];
+
+  const app = await NestFactory.create(AppModule, { logger: loggerLevels as any });
+  const logger = new Logger('Bootstrap');
 
   // Increase global body size limit BEFORE applying global pipes or middlewares
   app.use(bodyParser.json({ limit: '5mb' }));
@@ -45,7 +51,7 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3001;
   await app.listen(port);
-  console.log(`Application is running on: http://localhost:${port}`);
-  console.log(`Swagger documentation is available at: http://localhost:${port}/api`);
+  logger.log(`Application is running on: http://localhost:${port}`);
+  logger.log(`Swagger documentation is available at: http://localhost:${port}/api`);
 }
 bootstrap(); 

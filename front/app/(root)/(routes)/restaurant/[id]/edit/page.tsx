@@ -377,10 +377,10 @@ export default function EditRestaurantPage() {
                 {loading ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Updating...
+                    Mise à jour...
                   </>
                 ) : (
-                  'Update Restaurant'
+                  'Mettre à jour le restaurant'
                 )}
               </Button>
               <Button

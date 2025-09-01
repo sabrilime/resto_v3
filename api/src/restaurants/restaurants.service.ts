@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Restaurant } from './entities/restaurant.entity';
@@ -15,16 +15,16 @@ export class RestaurantsService {
     private specialityRepository: Repository<Speciality>,
   ) {}
 
+  private readonly logger = new Logger(RestaurantsService.name);
+
   async create(createRestaurantDto: CreateRestaurantDto): Promise<Restaurant> {
     const { specialityIds, ...restaurantData } = createRestaurantDto;
     
-    console.log('createRestaurantDto:', createRestaurantDto);
-    console.log('restaurantData:', restaurantData);
-    console.log('postedByUserId:', restaurantData.postedByUserId);
+    this.logger.log(`Creating restaurant (postedByUserId=${restaurantData.postedByUserId ?? 'unknown'})`);
     
     const restaurant = this.restaurantRepository.create(restaurantData);
     
-    console.log('Created restaurant entity:', restaurant);
+    // entity created
     
     // Handle specialities if provided
     if (specialityIds && specialityIds.length > 0) {
@@ -54,12 +54,7 @@ export class RestaurantsService {
       throw new NotFoundException(`Restaurant with ID ${id} not found`);
     }
     
-    console.log('Restaurant found:', restaurant);
-    console.log('Restaurant address:', restaurant.address);
     if (restaurant.address) {
-      console.log('Address latitude:', restaurant.address.latitude, 'type:', typeof restaurant.address.latitude);
-      console.log('Address longitude:', restaurant.address.longitude, 'type:', typeof restaurant.address.longitude);
-      
       // Convert decimal strings to numbers if needed
       if (typeof restaurant.address.latitude === 'string') {
         restaurant.address.latitude = parseFloat(restaurant.address.latitude);
@@ -84,15 +79,12 @@ export class RestaurantsService {
   }
 
   async update(id: number, updateRestaurantDto: UpdateRestaurantDto): Promise<Restaurant> {
-    console.log('Updating restaurant:', id, 'with data:', updateRestaurantDto);
+    this.logger.log(`Updating restaurant ${id}`);
     
     const restaurant = await this.findOne(id);
-    console.log('Found restaurant:', restaurant);
     
     // Handle specialities separately
     const { specialityIds, ...restaurantData } = updateRestaurantDto;
-    console.log('Restaurant data to update:', restaurantData);
-    console.log('Speciality IDs:', specialityIds);
     
     // Update basic restaurant properties
     Object.assign(restaurant, restaurantData);
@@ -104,30 +96,30 @@ export class RestaurantsService {
           where: specialityIds.map(id => ({ id }))
         });
         restaurant.specialities = specialities;
-        console.log('Updated specialities:', specialities);
+        this.logger.log(`Updated specialities count: ${specialities.length}`);
       } else {
         restaurant.specialities = [];
-        console.log('Cleared specialities');
+        this.logger.log('Cleared specialities');
       }
     }
     
     // Handle address if provided
     if (restaurantData.addressId !== undefined) {
-      console.log('Updating address ID to:', restaurantData.addressId);
+      this.logger.log(`Updating address ID to: ${restaurantData.addressId}`);
       restaurant.addressId = restaurantData.addressId;
     }
     
     const updatedRestaurant = await this.restaurantRepository.save(restaurant);
-    console.log('Saved restaurant:', updatedRestaurant);
+    this.logger.log('Restaurant saved');
     
     // Return the updated restaurant with all relations loaded
     const finalRestaurant = await this.findOne(id);
-    console.log('Final restaurant with relations:', finalRestaurant);
+    // final entity loaded
     return finalRestaurant;
   }
 
   async remove(id: number): Promise<void> {
-    console.log('Deleting restaurant with ID:', id);
+    this.logger.log(`Deleting restaurant with ID: ${id}`);
     
     // Find restaurant regardless of status for deletion
     const restaurant = await this.restaurantRepository.findOne({
@@ -139,17 +131,17 @@ export class RestaurantsService {
       throw new NotFoundException(`Restaurant with ID ${id} not found`);
     }
     
-    console.log('Found restaurant to delete:', restaurant.name, 'Current status:', restaurant.status);
+    this.logger.log(`Found restaurant to delete: ${restaurant.name} (status=${restaurant.status})`);
     
     // Check if already deleted
     if (restaurant.status === 'inactive') {
-      console.log('Restaurant is already deleted');
+      this.logger.log('Restaurant is already deleted');
       return;
     }
     
     restaurant.status = 'inactive';
     await this.restaurantRepository.save(restaurant);
-    console.log('Restaurant deleted successfully (soft delete)');
+    this.logger.log('Restaurant deleted successfully (soft delete)');
   }
 
   async search(query: string): Promise<Restaurant[]> {

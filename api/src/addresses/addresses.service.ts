@@ -16,9 +16,7 @@ export class AddressesService {
   ) {}
 
   create(createAddressDto: CreateAddressDto) {
-    console.log('[AddressesService.create] DTO:', createAddressDto);
     const address = this.addressesRepository.create(createAddressDto);
-    console.log('[AddressesService.create] Created entity:', address);
     return this.addressesRepository.save(address);
   }
 
@@ -47,14 +45,10 @@ export class AddressesService {
   }
 
   async createFromApiAdresse(apiAdresseId: string): Promise<Address> {
-    console.log('[createFromApiAdresse] Start', { apiAdresseId });
     try {
       const apiAdresseFeature = await this.apiAdresseService.getAddressById(apiAdresseId);
-      console.log('[createFromApiAdresse] API Adresse feature:', apiAdresseFeature);
       const createAddressDto = this.apiAdresseService.convertToCreateAddressDto(apiAdresseFeature);
-      console.log('[createFromApiAdresse] Converted DTO:', createAddressDto);
       const address = await this.create(createAddressDto);
-      console.log('[createFromApiAdresse] Saved address:', address);
       return address;
     } catch (error) {
       console.error('[createFromApiAdresse] Error:', error);

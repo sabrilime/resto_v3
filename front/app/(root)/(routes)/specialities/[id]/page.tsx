@@ -85,7 +85,11 @@ const SpecialityDetailPage = () => {
 
         // Fetch restaurants with this speciality
         const restaurantsData = await api.restaurants.getBySpeciality(parseInt(specialityId));
-        setRestaurants(restaurantsData);
+        // Sort alphabetically by name (A→Z), ignore case/accents
+        const sorted = Array.isArray(restaurantsData)
+          ? [...restaurantsData].sort((a, b) => (a?.name || '').localeCompare(b?.name || '', 'fr', { sensitivity: 'base' }))
+          : [];
+        setRestaurants(sorted);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Une erreur s\'est produite');
       } finally {

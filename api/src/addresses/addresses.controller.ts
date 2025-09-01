@@ -16,9 +16,6 @@ export class AddressesController {
   @ApiOperation({ summary: 'Create a new address' })
   @ApiResponse({ status: 201, description: 'Address created successfully', type: Address })
   create(@Body() createAddressDto: CreateAddressDto) {
-    console.log('[AddressesController.create] Received DTO:', createAddressDto);
-    console.log('[AddressesController.create] Latitude type:', typeof createAddressDto.latitude);
-    console.log('[AddressesController.create] Longitude type:', typeof createAddressDto.longitude);
     return this.addressesService.create(createAddressDto);
   }
 

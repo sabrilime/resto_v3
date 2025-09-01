@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   UseGuards,
   Request,
+  Logger,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { RestaurantsService } from './restaurants.service';
@@ -30,6 +31,8 @@ export class RestaurantsController {
     private readonly chatbotService: ChatbotService,
   ) {}
 
+  private readonly logger = new Logger(RestaurantsController.name);
+
   @Post()
   @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Create a new restaurant' })
@@ -39,13 +42,11 @@ export class RestaurantsController {
     @Body() createRestaurantDto: CreateRestaurantDto,
     @Request() req
   ) {
-    console.log('req.user:', req.user);
-    console.log('req.user.userId:', req.user?.userId);
+    this.logger.log(`Create restaurant requested by user ${req?.user?.userId}`);
     
     // Overwrite postedByUserId with the authenticated user's id
     createRestaurantDto.postedByUserId = req.user.userId; // Changed from req.user.id to req.user.userId
-    
-    console.log('After setting postedByUserId:', createRestaurantDto.postedByUserId);
+    this.logger.log('postedByUserId set from JWT');
     
     return this.restaurantsService.create(createRestaurantDto);
   }
@@ -106,8 +107,7 @@ export class RestaurantsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateRestaurantDto: UpdateRestaurantDto,
   ): Promise<Restaurant> {
-    console.log('Controller received update request for restaurant:', id);
-    console.log('Update data:', updateRestaurantDto);
+    this.logger.log(`Update restaurant ${id}`);
     return this.restaurantsService.update(id, updateRestaurantDto);
   }
 
@@ -116,12 +116,12 @@ export class RestaurantsController {
   @ApiResponse({ status: 200, description: 'Restaurant deleted successfully', schema: { type: 'object', properties: { message: { type: 'string' } } } })
   @ApiResponse({ status: 404, description: 'Restaurant not found' })
   async remove(@Param('id', ParseIntPipe) id: number): Promise<{ message: string }> {
-    console.log('Controller received delete request for restaurant:', id);
+    this.logger.log(`Delete restaurant ${id}`);
     try {
       await this.restaurantsService.remove(id);
       return { message: 'Restaurant deleted successfully' };
     } catch (error) {
-      console.error('Error deleting restaurant:', error);
+      this.logger.error('Error deleting restaurant', (error as any)?.stack || String(error));
       throw error;
     }
   }
