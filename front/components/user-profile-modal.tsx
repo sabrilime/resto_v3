@@ -34,9 +34,6 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
 
   // Check if user is connected with Google
   const isGoogleUser = Boolean(user?.googleId || user?.provider === 'google');
-  
-  // Debug logging
-  console.log('User profile modal - isGoogleUser:', isGoogleUser, 'user:', user);
 
   // Update form data when user changes or modal opens
   useEffect(() => {

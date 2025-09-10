@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -52,6 +52,7 @@ export const AddressSearch = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showResults, setShowResults] = useState(false);
+  const skipNextSearchRef = useRef(false);
 
   const searchAddresses = async (searchQuery: string) => {
     if (searchQuery.length < 3) {
@@ -77,15 +78,21 @@ export const AddressSearch = ({
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (query) {
-        searchAddresses(query);
+      if (!query) return;
+      if (skipNextSearchRef.current) {
+        // Skip the search triggered by selecting an item
+        skipNextSearchRef.current = false;
+        return;
       }
+      searchAddresses(query);
     }, 300);
 
     return () => clearTimeout(timeoutId);
   }, [query]);
 
   const handleAddressSelect = (address: ApiAdresseFeature) => {
+    // Prevent the subsequent effect from reopening results
+    skipNextSearchRef.current = true;
     setQuery(address.properties.label);
     setShowResults(false);
     onAddressSelect?.(address);
@@ -167,7 +174,7 @@ export const AddressSearch = ({
       {showResults && addresses.length === 0 && !loading && query.length >= 3 && (
         <Card className="absolute top-full left-0 right-0 z-50 mt-1">
           <CardContent className="p-4 text-center text-gray-500">
-            No addresses found
+            Aucune adresse trouvée
           </CardContent>
         </Card>
       )}

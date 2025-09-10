@@ -55,6 +55,11 @@ export class ChatbotService {
     
     // Common speciality keywords in French
     const specialityKeywords = {
+      // Brunch & breakfast
+      'brunch': 'Brunch',
+      'petit dejeuner': 'Brunch',
+      'petit-déjeuner': 'Brunch',
+      'breakfast': 'Brunch',
       'italien': 'Italien',
       'italienne': 'Italien',
       'italiennes': 'Italien',

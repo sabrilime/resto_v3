@@ -14,15 +14,12 @@ export function AuthWrapper({ children }: { children: React.ReactNode }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
-    console.log('AuthWrapper - pathname:', pathname, 'user:', !!user, 'loading:', loading);
     
     if (!loading) {
       // If user is not authenticated
       if (!user) {
-        console.log('User not authenticated, checking if route is public:', publicRoutes.includes(pathname));
         // Only allow access to public routes
         if (!publicRoutes.includes(pathname)) {
-          console.log('Redirecting to /sign-in from:', pathname);
           // Use window.location to force a full redirect
           window.location.href = '/sign-in';
         }
@@ -30,7 +27,6 @@ export function AuthWrapper({ children }: { children: React.ReactNode }) {
         // If user is authenticated and trying to access auth routes, redirect to home
         // But allow if we're in the process of logging out
         if (publicRoutes.includes(pathname) && !isLoggingOut) {
-          console.log('Authenticated user accessing auth route, redirecting to /');
           router.push('/');
         }
       }
