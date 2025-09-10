@@ -209,7 +209,7 @@ export default function EditRestaurantPage() {
         <div className="flex items-center justify-center h-64">
           <div className="flex items-center gap-2">
             <Loader2 className="h-6 w-6 animate-spin" />
-            <span>Loading restaurant data...</span>
+            <span>Chargement des données du restaurant...</span>
           </div>
         </div>
       </div>
@@ -356,7 +356,7 @@ export default function EditRestaurantPage() {
                 ))}
               </div>
               {specialities.length === 0 && (
-                <p className="text-sm text-gray-500">Loading specialities...</p>
+                <p className="text-sm text-gray-500">Chargement des spécialités...</p>
               )}
             </div>
 

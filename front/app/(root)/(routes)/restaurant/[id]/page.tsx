@@ -55,7 +55,7 @@ export default function RestaurantPage() {
     return (
       <div className="container mx-auto p-6 max-w-4xl">
         <div className="flex items-center justify-center h-64">
-          <div className="text-lg">Loading restaurant...</div>
+          <div className="text-lg">Chargement du restaurant...</div>
         </div>
       </div>
     );

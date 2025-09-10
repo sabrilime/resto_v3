@@ -62,7 +62,7 @@ export function AuthWrapper({ children }: { children: React.ReactNode }) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Loading...</h2>
+          <h2 className="text-2xl font-bold mb-4">Chargement...</h2>
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
         </div>
       </div>

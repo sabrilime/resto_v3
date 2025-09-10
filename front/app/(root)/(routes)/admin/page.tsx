@@ -57,7 +57,7 @@ export default function AdminPage() {
       const data = await api.users.getAllForAdmin();
       setUsers(data);
     } catch (err) {
-      setError('Failed to fetch users');
+      setError('Échec du chargement des utilisateurs');
       console.error('Error fetching users:', err);
     } finally {
       setLoading(false);
@@ -87,7 +87,7 @@ export default function AdminPage() {
       setEditingUser(null);
       setIsEditDialogOpen(false);
     } catch (err) {
-      setError('Failed to update user');
+      setError("Échec de la mise à jour de l'utilisateur");
       console.error('Error updating user:', err);
     } finally {
       setSaving(false);
@@ -114,7 +114,7 @@ export default function AdminPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-center items-center h-64">
-          <div className="text-lg">Loading...</div>
+          <div className="text-lg">Chargement...</div>
         </div>
       </div>
     );
@@ -124,7 +124,7 @@ export default function AdminPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center text-red-600">
-          <h2 className="text-xl font-semibold mb-4">Error</h2>
+          <h2 className="text-xl font-semibold mb-4">Erreur</h2>
           <p>{error}</p>
         </div>
       </div>
@@ -134,24 +134,24 @@ export default function AdminPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
-        <p className="text-gray-600">Manage all users in the system</p>
+        <h1 className="text-3xl font-bold mb-2">Administration</h1>
+        <p className="text-gray-600">Gérer les utilisateurs du système</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Users ({users.length})</CardTitle>
+          <CardTitle>Utilisateurs ({users.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left p-2">Name</th>
+                  <th className="text-left p-2">Nom</th>
                   <th className="text-left p-2">Email</th>
-                  <th className="text-left p-2">Role</th>
-                  <th className="text-left p-2">Status</th>
-                  <th className="text-left p-2">Created</th>
+                  <th className="text-left p-2">Rôle</th>
+                  <th className="text-left p-2">Statut</th>
+                  <th className="text-left p-2">Créé le</th>
                   <th className="text-left p-2">Actions</th>
                 </tr>
               </thead>
@@ -164,12 +164,12 @@ export default function AdminPage() {
                     <td className="p-2">{user.email}</td>
                     <td className="p-2">
                       <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>
-                        {user.role}
+                        {user.role === 'admin' ? 'Administrateur' : 'Utilisateur'}
                       </Badge>
                     </td>
                     <td className="p-2">
                       <Badge variant={user.isActive ? 'default' : 'destructive'}>
-                        {user.isActive ? 'Active' : 'Inactive'}
+                        {user.isActive ? 'Actif' : 'Inactif'}
                       </Badge>
                     </td>
                     <td className="p-2 text-sm text-gray-600">
@@ -183,12 +183,12 @@ export default function AdminPage() {
                             size="sm"
                             onClick={() => handleEditUser(user)}
                           >
-                            Edit
+                            Modifier
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px]">
                           <DialogHeader>
-                            <DialogTitle>Edit User</DialogTitle>
+                            <DialogTitle>Modifier l'utilisateur</DialogTitle>
                           </DialogHeader>
                           {error && (
                             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -198,7 +198,7 @@ export default function AdminPage() {
                           <div className="grid gap-4 py-4">
                             <div className="grid grid-cols-4 items-center gap-4">
                               <Label htmlFor="firstName" className="text-right">
-                                First Name
+                                Prénom
                               </Label>
                               <Input
                                 id="firstName"
@@ -209,7 +209,7 @@ export default function AdminPage() {
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
                               <Label htmlFor="lastName" className="text-right">
-                                Last Name
+                                Nom
                               </Label>
                               <Input
                                 id="lastName"
@@ -232,7 +232,7 @@ export default function AdminPage() {
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
                               <Label htmlFor="role" className="text-right">
-                                Role
+                                Rôle
                               </Label>
                               <Select
                                 value={editForm.role}
@@ -242,14 +242,14 @@ export default function AdminPage() {
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="user">User</SelectItem>
-                                  <SelectItem value="admin">Admin</SelectItem>
+                                  <SelectItem value="user">Utilisateur</SelectItem>
+                                  <SelectItem value="admin">Administrateur</SelectItem>
                                 </SelectContent>
                               </Select>
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
                               <Label htmlFor="isActive" className="text-right">
-                                Active
+                                Actif
                               </Label>
                               <div className="col-span-3 flex items-center space-x-2">
                                 <Checkbox
@@ -257,16 +257,16 @@ export default function AdminPage() {
                                   checked={editForm.isActive}
                                   onCheckedChange={(checked) => setEditForm({ ...editForm, isActive: checked as boolean })}
                                 />
-                                <Label htmlFor="isActive">User is active</Label>
+                                <Label htmlFor="isActive">Utilisateur actif</Label>
                               </div>
                             </div>
                           </div>
                           <div className="flex justify-end space-x-2">
                             <Button variant="outline" onClick={handleCancelEdit} disabled={saving}>
-                              Cancel
+                              Annuler
                             </Button>
                             <Button onClick={handleSaveUser} disabled={saving}>
-                              {saving ? 'Saving...' : 'Save Changes'}
+                              {saving ? 'Enregistrement...' : 'Enregistrer les modifications'}
                             </Button>
                           </div>
                         </DialogContent>

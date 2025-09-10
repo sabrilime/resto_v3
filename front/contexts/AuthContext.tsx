@@ -30,20 +30,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in on app start
-    const token = localStorage.getItem('token');
-    const savedUser = localStorage.getItem('user');
-    
-    if (token && savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (error) {
-        console.error('Error parsing saved user:', error);
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+    let cancelled = false;
+    const init = async () => {
+      // On app start, validate token with backend to avoid stale localStorage state
+      const token = localStorage.getItem('token');
+      const savedUser = localStorage.getItem('user');
+
+      // Optimistically set saved user (optional), but still validate
+      if (savedUser) {
+        try {
+          const parsed = JSON.parse(savedUser);
+          if (!cancelled) setUser(parsed);
+        } catch {
+          localStorage.removeItem('user');
+        }
       }
-    }
-    setLoading(false);
+
+      if (token) {
+        try {
+          const userData = await api.auth.me();
+          if (!cancelled) {
+            setUser(userData);
+            localStorage.setItem('user', JSON.stringify(userData));
+          }
+        } catch {
+          // Invalid/expired token -> clear and treat as logged out
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          if (!cancelled) setUser(null);
+        }
+      } else {
+        // Ensure clean state when no token
+        localStorage.removeItem('user');
+        if (!cancelled) setUser(null);
+      }
+
+      if (!cancelled) setLoading(false);
+    };
+
+    init();
+    return () => { cancelled = true; };
   }, []);
 
   const login = async (email: string, password: string) => {
